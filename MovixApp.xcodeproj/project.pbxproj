@@ -11,6 +11,10 @@
 		B469DC7E2C42067A000A5F90 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B469DC7D2C42067A000A5F90 /* ContentView.swift */; };
 		B469DC802C42067B000A5F90 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B469DC7F2C42067B000A5F90 /* Assets.xcassets */; };
 		B469DC832C42067B000A5F90 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B469DC822C42067B000A5F90 /* Preview Assets.xcassets */; };
+		B469DC8F2C420A89000A5F90 /* CapsuleButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B469DC8E2C420A89000A5F90 /* CapsuleButton.swift */; };
+		B469DC912C420DA4000A5F90 /* CapsuleModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = B469DC902C420DA4000A5F90 /* CapsuleModifier.swift */; };
+		B469DC952C421576000A5F90 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B469DC942C421576000A5F90 /* LoginView.swift */; };
+		B469DC972C42215C000A5F90 /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B469DC962C42215C000A5F90 /* SignUpView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +23,10 @@
 		B469DC7D2C42067A000A5F90 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		B469DC7F2C42067B000A5F90 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B469DC822C42067B000A5F90 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		B469DC8E2C420A89000A5F90 /* CapsuleButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapsuleButton.swift; sourceTree = "<group>"; };
+		B469DC902C420DA4000A5F90 /* CapsuleModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapsuleModifier.swift; sourceTree = "<group>"; };
+		B469DC942C421576000A5F90 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		B469DC962C42215C000A5F90 /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,10 +59,8 @@
 		B469DC7A2C42067A000A5F90 /* MovixApp */ = {
 			isa = PBXGroup;
 			children = (
-				B469DC7B2C42067A000A5F90 /* MovixAppApp.swift */,
-				B469DC7D2C42067A000A5F90 /* ContentView.swift */,
-				B469DC7F2C42067B000A5F90 /* Assets.xcassets */,
-				B469DC812C42067B000A5F90 /* Preview Content */,
+				B469DC8B2C420A37000A5F90 /* Core */,
+				B469DC892C42079C000A5F90 /* Resources */,
 			);
 			path = MovixApp;
 			sourceTree = "<group>";
@@ -65,6 +71,60 @@
 				B469DC822C42067B000A5F90 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		B469DC892C42079C000A5F90 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				B469DC812C42067B000A5F90 /* Preview Content */,
+				B469DC7F2C42067B000A5F90 /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		B469DC8A2C420A32000A5F90 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				B469DC7B2C42067A000A5F90 /* MovixAppApp.swift */,
+				B469DC7D2C42067A000A5F90 /* ContentView.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		B469DC8B2C420A37000A5F90 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				B469DC8A2C420A32000A5F90 /* App */,
+				B469DC8C2C420A3B000A5F90 /* Modifiers */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		B469DC8C2C420A3B000A5F90 /* Modifiers */ = {
+			isa = PBXGroup;
+			children = (
+				B469DC922C421563000A5F90 /* Authentication */,
+				B469DC8E2C420A89000A5F90 /* CapsuleButton.swift */,
+				B469DC902C420DA4000A5F90 /* CapsuleModifier.swift */,
+			);
+			path = Modifiers;
+			sourceTree = "<group>";
+		};
+		B469DC922C421563000A5F90 /* Authentication */ = {
+			isa = PBXGroup;
+			children = (
+				B469DC932C421567000A5F90 /* Views */,
+			);
+			path = Authentication;
+			sourceTree = "<group>";
+		};
+		B469DC932C421567000A5F90 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				B469DC942C421576000A5F90 /* LoginView.swift */,
+				B469DC962C42215C000A5F90 /* SignUpView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -138,6 +198,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				B469DC7E2C42067A000A5F90 /* ContentView.swift in Sources */,
+				B469DC912C420DA4000A5F90 /* CapsuleModifier.swift in Sources */,
+				B469DC8F2C420A89000A5F90 /* CapsuleButton.swift in Sources */,
+				B469DC952C421576000A5F90 /* LoginView.swift in Sources */,
+				B469DC972C42215C000A5F90 /* SignUpView.swift in Sources */,
 				B469DC7C2C42067A000A5F90 /* MovixAppApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -271,7 +335,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"MovixApp/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "MovixApp/Resources/Preview\\ Content";
 				DEVELOPMENT_TEAM = 5VZ6Q8DGLP;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -300,7 +364,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"MovixApp/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "MovixApp/Resources/Preview\\ Content";
 				DEVELOPMENT_TEAM = 5VZ6Q8DGLP;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
