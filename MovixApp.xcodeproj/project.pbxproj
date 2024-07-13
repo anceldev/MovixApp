@@ -15,6 +15,7 @@
 		B469DC912C420DA4000A5F90 /* CapsuleModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = B469DC902C420DA4000A5F90 /* CapsuleModifier.swift */; };
 		B469DC952C421576000A5F90 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B469DC942C421576000A5F90 /* LoginView.swift */; };
 		B469DC972C42215C000A5F90 /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B469DC962C42215C000A5F90 /* SignUpView.swift */; };
+		B469DC9B2C4222CA000A5F90 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B469DC9A2C4222CA000A5F90 /* ProfileView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +28,7 @@
 		B469DC902C420DA4000A5F90 /* CapsuleModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapsuleModifier.swift; sourceTree = "<group>"; };
 		B469DC942C421576000A5F90 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		B469DC962C42215C000A5F90 /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
+		B469DC9A2C4222CA000A5F90 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,6 +61,7 @@
 		B469DC7A2C42067A000A5F90 /* MovixApp */ = {
 			isa = PBXGroup;
 			children = (
+				B469DC8A2C420A32000A5F90 /* App */,
 				B469DC8B2C420A37000A5F90 /* Core */,
 				B469DC892C42079C000A5F90 /* Resources */,
 			);
@@ -94,8 +97,9 @@
 		B469DC8B2C420A37000A5F90 /* Core */ = {
 			isa = PBXGroup;
 			children = (
-				B469DC8A2C420A32000A5F90 /* App */,
+				B469DC922C421563000A5F90 /* Authentication */,
 				B469DC8C2C420A3B000A5F90 /* Modifiers */,
+				B469DC982C4222B5000A5F90 /* Profile */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -103,7 +107,6 @@
 		B469DC8C2C420A3B000A5F90 /* Modifiers */ = {
 			isa = PBXGroup;
 			children = (
-				B469DC922C421563000A5F90 /* Authentication */,
 				B469DC8E2C420A89000A5F90 /* CapsuleButton.swift */,
 				B469DC902C420DA4000A5F90 /* CapsuleModifier.swift */,
 			);
@@ -123,6 +126,22 @@
 			children = (
 				B469DC942C421576000A5F90 /* LoginView.swift */,
 				B469DC962C42215C000A5F90 /* SignUpView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		B469DC982C4222B5000A5F90 /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				B469DC992C4222C4000A5F90 /* Views */,
+			);
+			path = Profile;
+			sourceTree = "<group>";
+		};
+		B469DC992C4222C4000A5F90 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				B469DC9A2C4222CA000A5F90 /* ProfileView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -202,6 +221,7 @@
 				B469DC8F2C420A89000A5F90 /* CapsuleButton.swift in Sources */,
 				B469DC952C421576000A5F90 /* LoginView.swift in Sources */,
 				B469DC972C42215C000A5F90 /* SignUpView.swift in Sources */,
+				B469DC9B2C4222CA000A5F90 /* ProfileView.swift in Sources */,
 				B469DC7C2C42067A000A5F90 /* MovixAppApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
