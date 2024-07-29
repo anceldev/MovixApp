@@ -12,10 +12,11 @@ struct CapsuleButton: ButtonStyle {
     enum CapsuleColor {
         case orangeGradient
         case gray
+        case lightGray
     }
     
-//    let filled: Bool
     let color: CapsuleColor
+    let height: CGFloat
     
     var bg: LinearGradient {
         switch color {
@@ -23,6 +24,8 @@ struct CapsuleButton: ButtonStyle {
             LinearGradient(colors: [Color.marsA, Color.marsB], startPoint: .bottomLeading, endPoint: .topTrailing)
         case .gray:
             LinearGradient(colors: [Color.grayM, Color.grayM], startPoint: .bottomLeading, endPoint: .topTrailing)
+        case .lightGray:
+            LinearGradient(colors: [Color(hex: "#E595957")], startPoint: .leading, endPoint: .trailing)
         }
     }
     
@@ -30,31 +33,45 @@ struct CapsuleButton: ButtonStyle {
         configuration.label
             .font(.system(size: 20))
             .foregroundStyle(.white)
-            .frame(maxWidth: .infinity)
-            .frame(height: 56)
+        //            .frame(maxWidth: .infinity)
+            .frame(height: height)
             .background(bg)
             .clipShape(Capsule())
     }
 }
 
 extension ButtonStyle where Self == CapsuleButton {
-    static var capsuleButton: CapsuleButton { .init(color: .orangeGradient)}
-    static func capsuleButton(_ color: CapsuleButton.CapsuleColor) -> CapsuleButton {
-        CapsuleButton(color: color)
+    static var capsuleButton: CapsuleButton { .init(color: .orangeGradient, height: 56)}
+    static func capsuleButton(_ color: CapsuleButton.CapsuleColor = .orangeGradient, height: CGFloat = 56) -> CapsuleButton {
+        CapsuleButton(color: color, height: height)
     }
 }
 
 #Preview(traits: .sizeThatFitsLayout, body: {
     VStack(spacing: 16) {
-        Button("Login") {
-            print("Login...")
-        }
+        
+        Button(action: {
+            print("Login")
+        }, label: {
+            Text("Login")
+                .frame(maxWidth: .infinity)
+        })
         .buttonStyle(.capsuleButton)
         
-        Button("Apply") {
+        Button(action: {
             print("Apply...")
-        }
+        }, label: {
+            Text("Apply")
+                .frame(maxWidth: .infinity)
+        })
         .buttonStyle(.capsuleButton(.gray))
+        Button(action: {
+            print("Apply...")
+        }, label: {
+            Text("Apply")
+                .frame(maxWidth: .infinity)
+        })
+        .buttonStyle(.capsuleButton(.lightGray))
         
         Text("Sign up")
             .capsuleModifier(.white)
