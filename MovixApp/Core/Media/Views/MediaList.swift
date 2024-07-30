@@ -12,7 +12,7 @@ struct MediaList: View {
     var body: some View {
         ScrollView(.vertical) {
             if movies.count > 0 {
-                VStack(alignment: .leading) {
+                LazyVStack(alignment: .leading) {
                     ForEach(movies) { movie in
                         NavigationLink {
                             MovieView(movie: movie)

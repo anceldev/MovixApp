@@ -21,6 +21,7 @@ class ApiTMDB {
         case tvSerie = "tv"
         case trending
         case search
+        case people = "person"
     }
     enum Lang: String {
         case en = "language=en-US"
@@ -84,6 +85,7 @@ class ApiTMDB {
         let query = "query=" + searchTerm
         do {
             let urlString = baseEndpoint + endpoint.rawValue + "/" + mediaSearch.rawValue + "?" + apiKey + "&" + query
+            
             guard let url = URL(string: urlString) else {
                 throw NetworkError.invalidUrl
             }
@@ -106,7 +108,7 @@ class ApiTMDB {
         let mediaSerch = Endpoint.movie
         do {
             let urlString = baseEndpoint + mediaSerch.rawValue + "/\(id)/credits?" + apiKey
-            print(urlString)
+            
             guard let url = URL(string: urlString) else { throw NetworkError.invalidUrl }
             let credits = try await NetworkManager.shared.fetchData(data: Credits.self, from: url)
             return credits.cast
@@ -120,5 +122,25 @@ class ApiTMDB {
             print("DEBUG - Error: Unknown error")
         }
         return []
+    }
+    
+    func getPeople(id: Int) async throws -> People? {
+        let personSearch = Endpoint.people
+        do {
+            let urlString = baseEndpoint + personSearch.rawValue + "/\(id)?" + apiKey
+            
+            guard let url = URL(string: urlString) else { throw NetworkError.invalidUrl }
+            let person = try await NetworkManager.shared.fetchData(data: People.self, from: url)
+            return person
+        } catch NetworkError.invalidUrl {
+            print("DEBUG - Error: Wrong url provided in casting")
+        } catch NetworkError.invalidResponse {
+            print("DEBUG - Error: Invalid response form URL")
+        } catch NetworkError.invalidData {
+            print("DEBUG - Error: Invalid data from response")
+        } catch {
+            print("DEBUG - Error: Unknown error")
+        }
+        return nil
     }
 }

@@ -15,8 +15,10 @@ struct PosterView: View {
     let duration: String
     let isAdult: Bool?
     let releasedDate: String
+    let size: CGSize
     
     var body: some View {
+
         ZStack {
             AsyncImage(url: posterURL) { phase in
                 switch phase {
@@ -25,8 +27,9 @@ struct PosterView: View {
                 case .success(let image):
                     image
                         .resizable()
-                        .aspectRatio(contentMode: .fit)
-//                case .failure(let error):
+//                        .aspectRatio(contentMode: .fit)
+                        .scaledToFill()
+                        .frame(width: size.width, height: size.height * 0.75, alignment: .top)
                 case .failure:
                     Image(systemName: "photo")
                         .font(.largeTitle)
@@ -34,11 +37,12 @@ struct PosterView: View {
                     ProgressView()
                 }
             }
+            .clipped()
             LinearGradient(
                 stops: [
-                    .init(color: .black.opacity(0.59), location: 0),
-                    .init(color: .black.opacity(0), location: 0.48),
-                    .init(color: .black, location: 1)
+                    .init(color: .bw10.opacity(0.59), location: 0),
+                    .init(color: .bw10.opacity(0), location: 0.48),
+                    .init(color: .bw10, location: 1)
                 ],
                 startPoint: .bottom,
                 endPoint: .top)
@@ -84,7 +88,7 @@ struct PosterView: View {
             .foregroundStyle(.white)
         }
         .frame(maxWidth: .infinity)
-//        .frame(height: 468)
+
     }
 }
 

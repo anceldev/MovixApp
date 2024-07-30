@@ -15,7 +15,7 @@ struct ProfileView: View {
         VStack {
             VStack(spacing: 16) {
                 VStack(spacing: 10) {
-                    Image("profileDefault")
+                    Image(.profileDefault)
                         .resizable()
                         .frame(width: 104, height: 104)
                     Text(name)

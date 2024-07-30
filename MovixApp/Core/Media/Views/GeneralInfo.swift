@@ -41,14 +41,9 @@ struct GeneralInfo: View {
                 }
                 ScrollView(.horizontal) {
                     HStack(spacing: 12) {
-                        //                        ForEach(actors) { actor in
-                        //                            NavigationLink(value: actor.id) {
-                        //                                ActorLink(imageUrl: actor.imageUrl, name: actor.name, lastname: actor.lastname, genre: actor.genre.rawValue)
-                        //                            }
-                        //                        }
                         ForEach(cast) { actor in
                             NavigationLink {
-                                Text(actor.originalName)
+                                PeopleView(id: actor.id)
                             } label: {
                                 ActorLink(
                                     imageUrl: actor.profilePath, name:
@@ -86,7 +81,7 @@ struct GeneralInfo: View {
                     }
                     .clipped()
                     .clipShape(Circle())
-
+                    
                 case .failure(_):
                     Image(systemName: "photo")
                 @unknown default:
