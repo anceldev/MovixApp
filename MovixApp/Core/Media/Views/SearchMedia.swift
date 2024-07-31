@@ -12,8 +12,10 @@ struct SearchMedia: View {
     @State private var searchTerm: String = ""
     @State private var showFilterSheet: Bool = false
     var viewModel: MoviesViewModel
+    @Environment(AuthenticationViewModel.self) private var authViewModel
     var body: some View {
         VStack {
+            Text(authViewModel.account?.name ?? authViewModel.usernameTMDB)
             SearchBar(
                 searchTerm: $searchTerm,
                 filterAction: {
@@ -23,13 +25,16 @@ struct SearchMedia: View {
             MediaList(movies: viewModel.movies)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(.bw20)
+        .background(.bw10)
         .onChange(of: searchTerm) {
-            viewModel.searchMovie(searchTerm: searchTerm)
+            if searchTerm == "" {
+                viewModel.getTrending()
+            } else {
+                viewModel.searchMovie(searchTerm: searchTerm)
+            }
         }
         .sheet(isPresented: $showFilterSheet, content: {
             FiltersView()
         })
-        
     }
 }

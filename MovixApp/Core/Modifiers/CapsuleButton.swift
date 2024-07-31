@@ -33,7 +33,7 @@ struct CapsuleButton: ButtonStyle {
         configuration.label
             .font(.system(size: 20))
             .foregroundStyle(.white)
-        //            .frame(maxWidth: .infinity)
+//                    .frame(maxWidth: .infinity)
             .frame(height: height)
             .background(bg)
             .clipShape(Capsule())

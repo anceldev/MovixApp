@@ -10,11 +10,10 @@ import SwiftUI
 struct LoginView: View {
     
     private enum FocusedField {
-        case email, password
+        case username, password
     }
     
-    @State private var email = ""
-    @State private var password = ""
+    @Bindable var viewModel: AuthenticationViewModel
     @FocusState private var focusedField: FocusedField?
     
     var body: some View {
@@ -23,24 +22,28 @@ struct LoginView: View {
                 Title()
                     .padding(.top, 44)
                 VStack(spacing: 16) {
-                    TextField("Your email", text: $email)
+                    TextField("Username", text: $viewModel.usernameTMDB)
                         .keyboardType(.emailAddress)
                         .autocorrectionDisabled()
                         .textInputAutocapitalization(.never)
-                        .capsuleModifier(focusedField == .email || email != "" ? .white : .bw50, input: true)
-                        .foregroundStyle(email != "" ? .white : .bw50)
-                        .focused($focusedField, equals: .email).animation(.easeInOut, value: focusedField)
+                        .capsuleModifier(focusedField == .username || viewModel.usernameTMDB != "" ? .white : .bw50, input: true)
+                        .foregroundStyle(viewModel.usernameTMDB != "" ? .white : .bw50)
+                        .focused($focusedField, equals: .username).animation(.easeInOut, value: focusedField)
                     
-                    SecureField("Password", text: $password)
-                        .capsuleModifier(focusedField == .password || password != "" ? .white : .bw50, input: true)
+                    SecureField("Password", text: $viewModel.passwordTMDB)
+                        .capsuleModifier(focusedField == .password || viewModel.passwordTMDB != "" ? .white : .bw50, input: true)
                         .autocorrectionDisabled()
                         .textInputAutocapitalization(.never)
                         .focused($focusedField, equals: .password).animation(.easeInOut, value: focusedField)
                     
-                    Button("Login") {
-                        print("Login...")
-                    }
+                    Button(action: {
+                        login()
+                    }, label: {
+                        Text("Login")
+                            .frame(maxWidth: .infinity)
+                    })
                     .buttonStyle(.capsuleButton(.orangeGradient))
+                    .disabled(viewModel.flow == .authenticating)
                     VStack {
                         Text("By clicking the login button, you accept Privacy")
                         Text("Policy rules of our company")
@@ -49,37 +52,37 @@ struct LoginView: View {
                     .font(.system(size: 14))
                     .foregroundStyle(.bw50)
                     .padding(.top, 2)
-                    VStack(spacing: 28) {
-                        HStack(spacing: 8) {
-                            Rectangle()
-                                .fill(.white)
-                                .frame(width: 60, height: 1)
-                            Text("Or continue with")
-                                .lineLimit(1)
-                                .foregroundStyle(.white)
-                                .font(.system(size: 14))
-                            Rectangle()
-                                .fill(.white)
-                                .frame(width: 60, height: 1)
-                        }
-                        HStack(spacing:38) {
-                            Button(action: {
-                                print("Google sign in...")
-                            }, label: {
-                                Image("googleSignIn")
-                                    .resizable()
-                                    .frame(width: 60, height: 60)
-                            })
-                            Button(action: {
-                                print("Apple sign in...")
-                            }, label: {
-                                Image("appleSignIn")
-                                    .resizable()
-                                    .frame(width: 60, height: 60)
-                            })
-                        }
-                    }
-                    .padding(.horizontal, 40)
+//                    VStack(spacing: 28) {
+//                        HStack(spacing: 8) {
+//                            Rectangle()
+//                                .fill(.white)
+//                                .frame(width: 60, height: 1)
+//                            Text("Or continue with")
+//                                .lineLimit(1)
+//                                .foregroundStyle(.white)
+//                                .font(.system(size: 14))
+//                            Rectangle()
+//                                .fill(.white)
+//                                .frame(width: 60, height: 1)
+//                        }
+//                        HStack(spacing:38) {
+//                            Button(action: {
+//                                print("Google sign in...")
+//                            }, label: {
+//                                Image("googleSignIn")
+//                                    .resizable()
+//                                    .frame(width: 60, height: 60)
+//                            })
+//                            Button(action: {
+//                                print("Apple sign in...")
+//                            }, label: {
+//                                Image("appleSignIn")
+//                                    .resizable()
+//                                    .frame(width: 60, height: 60)
+//                            })
+//                        }
+//                    }
+//                    .padding(.horizontal, 40)
                 }
                 Spacer()
             }
@@ -107,8 +110,20 @@ struct LoginView: View {
             .foregroundStyle(.white)
         }
     }
+    
+    private func login() {
+        do {
+            try viewModel.loginTMDB()
+        } catch {
+            print("DEBUG - Error: Error in LoginView")
+        }
+    }
 }
 
 #Preview(traits: .sizeThatFitsLayout, body: {
-    LoginView()
+    @State var preview = AuthenticationViewModel()
+    preview.account?.id = 1
+    preview.account?.name = "Name"
+    preview.account?.username = "Username"
+    return LoginView(viewModel: preview)
 })

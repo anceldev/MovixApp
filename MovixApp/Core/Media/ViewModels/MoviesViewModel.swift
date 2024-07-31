@@ -16,7 +16,7 @@ final class MoviesViewModel {
         getTrending()
     }
 
-    private func getTrending() {
+    func getTrending() {
         Task {
             self.movies = await ApiTMDB.shared.getTrendingMovies()
         }

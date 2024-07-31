@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MovieActionsBar: View {
-    let liked = true
+    let liked = false
     var body: some View {
         VStack {
             HStack(spacing: 34) {

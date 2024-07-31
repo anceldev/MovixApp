@@ -47,8 +47,6 @@ struct PosterView: View {
                 startPoint: .bottom,
                 endPoint: .top)
             VStack {
-                BannerTopBar()
-                    .padding(.top, 44)
                 Spacer()
 
                 Button(action: {

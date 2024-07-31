@@ -19,29 +19,33 @@ struct MovieView: View {
     
     var body: some View {
         GeometryReader { geo in
-        
-        ScrollView(.vertical) {
-            if let movie = movie {
-                PosterView(
-                    posterURL: movie.posterPath,
-                    duration: movie.duration,
-                    isAdult: movie.isAdult,
-                    releasedDate: movie.releaseDate?.yearString ?? "NP",
-                    size: geo.size
-                )
-                MovieActionsBar()
-                HStack {
-                    GeneralInfo(cast: viewModel.cast, overview: movie.overview)
+            ZStack(alignment: .top) {
+                ScrollView(.vertical) {
+                    if let movie = movie {
+                        PosterView(
+                            posterURL: movie.posterPath,
+                            duration: movie.duration,
+                            isAdult: movie.isAdult,
+                            releasedDate: movie.releaseDate?.yearString ?? "NP",
+                            size: geo.size
+                        )
+                        MovieActionsBar()
+                        HStack {
+                            GeneralInfo(cast: viewModel.cast, overview: movie.overview)
+                        }
+                        MediaTabs()
+                    } else {
+                        ProgressView()
+                    }
                 }
-                MediaTabs()
-            } else {
-                ProgressView()
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(.bw10)
+                .background(ignoresSafeAreaEdges: .bottom)
+                BannerTopBar()
+                    .padding(.top, 44)
             }
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(.bw10)
         .ignoresSafeArea()
-        }
     }
 }
 #Preview(body: {

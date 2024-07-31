@@ -9,19 +9,17 @@ import SwiftUI
 
 struct ContentView: View {
     
-    @State var viewModel = MoviesViewModel()
+   
+    @State var authViewModel = AuthenticationViewModel()
     
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
-            NavigationLink("Go to Movie") {
-                SearchMedia(viewModel: viewModel)
-            }
+        if authViewModel.account == nil {
+            LoginView(viewModel: authViewModel)
+                
+        } else {
+            MainTabView()
+                .environment(authViewModel)
         }
-        .padding()
     }
 }
 

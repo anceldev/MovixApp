@@ -15,17 +15,26 @@ struct BannerTopBar: View {
                 dismiss()
             }, label: {
                 Image(systemName: "chevron.left")
+                    .font(.title2)
             })
             Spacer(minLength: 0)
-            Button(action: {
-                print("Share...")
-            }, label: {
+            ShareLink(item: URL(string: "https://www.themoviedb.org/")!) {
                 Label("Share", systemImage: "square.and.arrow.up")
                     .labelStyle(.iconOnly)
-            })
+                    .font(.title2)
+            }
+//            Button(action: {
+//                print("Share...")
+//            }, label: {
+//                Label("Share", systemImage: "square.and.arrow.up")
+//                    .labelStyle(.iconOnly)
+//                    .font(.title2)
+//            })
+//            .opacity(0.6)
         }
+        .opacity(0.6)
         .padding(8)
-        .padding(.horizontal, 10)
+        .padding(.horizontal)
         .font(.system(size: 20))
         .foregroundStyle(.white)
         .frame(maxWidth: .infinity)
