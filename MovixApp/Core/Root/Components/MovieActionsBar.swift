@@ -9,6 +9,7 @@ import SwiftUI
 
 struct MovieActionsBar: View {
     let liked = false
+//    @Environment(AuthenticationViewModel.self) var authViewModel
     var body: some View {
         VStack {
             HStack(spacing: 34) {
@@ -71,4 +72,5 @@ struct MovieActionsBar: View {
 #Preview {
     MovieActionsBar()
         .background(.bw20)
+//        .environment(AuthenticationViewModel())
 }

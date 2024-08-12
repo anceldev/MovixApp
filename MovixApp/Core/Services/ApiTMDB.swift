@@ -22,7 +22,10 @@ class ApiTMDB {
         case trending
         case search
         case people = "person"
+        case movieGenres = "genre/movie/list?"
+        case tvGenres = "genre/tv/list?"
     }
+
     enum Lang: String {
         case en = "language=en-US"
         case es = "language=es-ES"
@@ -40,7 +43,8 @@ class ApiTMDB {
     func getMovieDetails(id: Int) async -> Movie? {
         do {
             let url = buildUrl(type: .movie, id: id)
-            let movie = try await NetworkManager.shared.fetchData(data: Movie.self, from: url)
+//            let movie = try await NetworkManager.shared.fetchData(data: Movie.self, from: url)
+            let movie = try await fetchData(data: Movie.self, from: url)
             return movie
         } catch NetworkError.invalidUrl {
             print("DEBUG - Error: Wrong url provided")
@@ -53,9 +57,7 @@ class ApiTMDB {
         }
         return nil
     }
-    
-    
-    
+
     func getTrendingMovies() async -> [Movie] {
         let baseSearch = Endpoint.trending
         let mediaSearch = Endpoint.movie
@@ -63,9 +65,9 @@ class ApiTMDB {
         
         do {
             let urlString = baseEndpoint + baseSearch.rawValue + "/" + mediaSearch.rawValue + "/" + timeWindow.rawValue + "?\(self.apiKey)"
-            
             let url = URL(string: urlString)
-            let movies = try await NetworkManager.shared.fetchData(data: MoviesCollection.self, from: url)
+            print("Enters again...")
+            let movies = try await fetchData(data: MoviesCollection.self, from: url)
             return movies.results
         } catch NetworkError.invalidUrl {
             print("DEBUG - Error: Wrong url provided in trneding")
@@ -89,7 +91,7 @@ class ApiTMDB {
             guard let url = URL(string: urlString) else {
                 throw NetworkError.invalidUrl
             }
-            let collection = try await NetworkManager.shared.fetchData(data: MoviesCollection.self, from: url)
+            let collection = try await fetchData(data: MoviesCollection.self, from: url)
             return collection.results
             
         } catch NetworkError.invalidUrl {
@@ -104,13 +106,32 @@ class ApiTMDB {
         return []
     }
     
+    func getMovieGenres(for media: Endpoint) async throws -> [Genre] {
+        let endpoint = baseEndpoint + media.rawValue + apiKey
+        do {
+            guard let url = URL(string: endpoint) else { throw NetworkError.invalidUrl }
+            let genres = try await fetchData(data: Genres.self, from: url)
+            return genres.genres
+        } catch NetworkError.invalidUrl {
+            print("DEBUG - Error: Wrong url provided")
+        } catch {
+            print("DEBUG - Error: error in network manager \(error.localizedDescription)")
+        }
+        return []
+    }
+    
+    func setFavoriteMovie(for id: Int, account accountId: Int, withSession session: String) {
+        let endpoint = "https://api.themoviedb.org/3/account/\(accountId)/favorite?\(session)"
+        print(endpoint)
+    }
+    
     func getCasting(id: Int) async throws -> [Cast] {
         let mediaSerch = Endpoint.movie
         do {
             let urlString = baseEndpoint + mediaSerch.rawValue + "/\(id)/credits?" + apiKey
             
             guard let url = URL(string: urlString) else { throw NetworkError.invalidUrl }
-            let credits = try await NetworkManager.shared.fetchData(data: Credits.self, from: url)
+            let credits = try await fetchData(data: Credits.self, from: url)
             return credits.cast
         } catch NetworkError.invalidUrl {
             print("DEBUG - Error: Wrong url provided in casting")
@@ -130,7 +151,7 @@ class ApiTMDB {
             let urlString = baseEndpoint + personSearch.rawValue + "/\(id)?" + apiKey
             
             guard let url = URL(string: urlString) else { throw NetworkError.invalidUrl }
-            let person = try await NetworkManager.shared.fetchData(data: People.self, from: url)
+            let person = try await fetchData(data: People.self, from: url)
             return person
         } catch NetworkError.invalidUrl {
             print("DEBUG - Error: Wrong url provided in casting")
@@ -142,5 +163,23 @@ class ApiTMDB {
             print("DEBUG - Error: Unknown error")
         }
         return nil
+    }
+    
+    
+    private func fetchData<T: Decodable>(data: T.Type, from url: URL?) async throws -> T {
+        guard let url = url else {
+            throw NetworkError.invalidUrl
+        }
+        let (data, response) = try await URLSession.shared.data(from: url)
+        
+        guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
+            throw NetworkError.invalidResponse
+        }
+        do {
+            let decoder = JSONDecoder()
+            return try decoder.decode(T.self, from: data)
+        } catch {
+            throw NetworkError.invalidData
+        }
     }
 }

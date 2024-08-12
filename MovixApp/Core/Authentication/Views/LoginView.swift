@@ -8,12 +8,12 @@
 import SwiftUI
 
 struct LoginView: View {
-    
     private enum FocusedField {
         case username, password
     }
     
     @Bindable var viewModel: AuthenticationViewModel
+//    @ObservedObject var viewModel: AuthenticationViewModel
     @FocusState private var focusedField: FocusedField?
     
     var body: some View {
@@ -29,12 +29,20 @@ struct LoginView: View {
                         .capsuleModifier(focusedField == .username || viewModel.usernameTMDB != "" ? .white : .bw50, input: true)
                         .foregroundStyle(viewModel.usernameTMDB != "" ? .white : .bw50)
                         .focused($focusedField, equals: .username).animation(.easeInOut, value: focusedField)
+                        .tint(.white)
+                        .onSubmit {
+                            focusedField = .password
+                        }
                     
                     SecureField("Password", text: $viewModel.passwordTMDB)
                         .capsuleModifier(focusedField == .password || viewModel.passwordTMDB != "" ? .white : .bw50, input: true)
                         .autocorrectionDisabled()
                         .textInputAutocapitalization(.never)
                         .focused($focusedField, equals: .password).animation(.easeInOut, value: focusedField)
+                        .tint(.white)
+                        .onSubmit {
+                            login()
+                        }
                     
                     Button(action: {
                         login()
@@ -52,37 +60,6 @@ struct LoginView: View {
                     .font(.system(size: 14))
                     .foregroundStyle(.bw50)
                     .padding(.top, 2)
-//                    VStack(spacing: 28) {
-//                        HStack(spacing: 8) {
-//                            Rectangle()
-//                                .fill(.white)
-//                                .frame(width: 60, height: 1)
-//                            Text("Or continue with")
-//                                .lineLimit(1)
-//                                .foregroundStyle(.white)
-//                                .font(.system(size: 14))
-//                            Rectangle()
-//                                .fill(.white)
-//                                .frame(width: 60, height: 1)
-//                        }
-//                        HStack(spacing:38) {
-//                            Button(action: {
-//                                print("Google sign in...")
-//                            }, label: {
-//                                Image("googleSignIn")
-//                                    .resizable()
-//                                    .frame(width: 60, height: 60)
-//                            })
-//                            Button(action: {
-//                                print("Apple sign in...")
-//                            }, label: {
-//                                Image("appleSignIn")
-//                                    .resizable()
-//                                    .frame(width: 60, height: 60)
-//                            })
-//                        }
-//                    }
-//                    .padding(.horizontal, 40)
                 }
                 Spacer()
             }
@@ -112,10 +89,12 @@ struct LoginView: View {
     }
     
     private func login() {
-        do {
-            try viewModel.loginTMDB()
-        } catch {
-            print("DEBUG - Error: Error in LoginView")
+        Task {
+            do {
+                try await viewModel.loginTMDB()
+            } catch {
+                print("DEBUG - Error: Error in LoginView")
+            }
         }
     }
 }

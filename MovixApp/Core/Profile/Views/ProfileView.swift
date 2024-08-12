@@ -8,8 +8,9 @@
 import SwiftUI
 
 struct ProfileView: View {
-    let name: String
-    let email: String
+    
+    @Environment(AuthenticationViewModel.self) var authViewModel
+//    @EnvironmentObject var authViewModel: AuthenticationViewModel
     
     var body: some View {
         VStack {
@@ -18,10 +19,10 @@ struct ProfileView: View {
                     Image(.profileDefault)
                         .resizable()
                         .frame(width: 104, height: 104)
-                    Text(name)
+                    Text(authViewModel.account?.name ?? "No name")
                         .font(.system(size: 20))
                         .foregroundStyle(.white)
-                    Text(email)
+                    Text(authViewModel.account?.username ?? "No username")
                         .font(.system(size: 16))
                         .foregroundStyle(.bw50)
                 }
@@ -29,8 +30,8 @@ struct ProfileView: View {
                 VStack(alignment: .leading, spacing: 0) {
                     SettingsList()
                     Button(action: {
-                        /// Logout action
                         print("Logout")
+                        logout()
                     }, label: {
                         Text("Logout")
                             .foregroundStyle(.blue1)
@@ -43,10 +44,22 @@ struct ProfileView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(.bw10)
     }
+    private func logout() {
+        Task {
+            do {
+                try await authViewModel.logoutTMDB()
+                
+            } catch {
+                print("DEBUG - Error: \(error.localizedDescription)")
+            }
+        }
+    }
 }
 
 #Preview {
     NavigationStack {
-        ProfileView(name: "Anna", email: "catya80@gmail.com")
+        ProfileView()
+            .environment(AuthenticationViewModel())
+//            .environmentObject(AuthenticationViewModel())
     }
 }

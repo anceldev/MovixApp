@@ -9,16 +9,21 @@ import SwiftUI
 
 struct ContentView: View {
     
-   
-    @State var authViewModel = AuthenticationViewModel()
-    
+   @State var authViewModel = AuthenticationViewModel()
+//    @StateObject var authViewModel = AuthenticationViewModel()
+
     var body: some View {
-        if authViewModel.account == nil {
-            LoginView(viewModel: authViewModel)
-                
-        } else {
-            MainTabView()
-                .environment(authViewModel)
+        VStack {
+            switch authViewModel.flow {
+            case .authenticated:
+                MainTabView()
+                    .environment(authViewModel)
+//                    .environmentObject(authViewModel)
+            case .authenticating:
+                ProgressView()
+            case .unauthenticated:
+                LoginView(viewModel: authViewModel)
+            }
         }
     }
 }

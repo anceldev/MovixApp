@@ -11,8 +11,10 @@ import SwiftUI
 struct SearchMedia: View {
     @State private var searchTerm: String = ""
     @State private var showFilterSheet: Bool = false
-    var viewModel: MoviesViewModel
+    @Bindable var viewModel: MoviesViewModel
     @Environment(AuthenticationViewModel.self) private var authViewModel
+//    @EnvironmentObject var authViewModel: AuthenticationViewModel
+    
     var body: some View {
         VStack {
             Text(authViewModel.account?.name ?? authViewModel.usernameTMDB)
@@ -28,7 +30,7 @@ struct SearchMedia: View {
         .background(.bw10)
         .onChange(of: searchTerm) {
             if searchTerm == "" {
-                viewModel.getTrending()
+                viewModel.getTrendingMovies()
             } else {
                 viewModel.searchMovie(searchTerm: searchTerm)
             }
@@ -37,4 +39,10 @@ struct SearchMedia: View {
             FiltersView()
         })
     }
+}
+
+#Preview {
+    MainTabView()
+        .environment(AuthenticationViewModel())
+//        .environmentObject(AuthenticationViewModel())
 }

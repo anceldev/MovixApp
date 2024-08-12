@@ -7,6 +7,7 @@
 
 import Foundation
 import Observation
+import SwiftUI
 
 enum AuthenticationError: Error {
     case invalidTokenResponse
@@ -22,6 +23,8 @@ enum AuthenticationError: Error {
     case invalidSession
     
     case imdbAuthentication
+    
+    case logoutError
 }
 
 enum AuthenticationFlow {
@@ -40,8 +43,27 @@ class AuthenticationViewModel {
     
     var usernameTMDB = ""
     var passwordTMDB = ""
+    
+    init(){
+        print("Reinit the viewmodel")
+        let currentSessionId = UserDefaults.standard.string(forKey: "session_id")
+        if currentSessionId != nil {
+            print("There is a existing session")
+            self.imdbSession = currentSessionId!
+            Task {
+                do {
+                    try await getAccount()
+                } catch {
+                    throw AuthenticationError.imdbAuthentication
+                }
+            }
+        } else {
+            print("No session in userdefaults")
+        }
+    }
 
-    func loginTMDB() throws {
+    @MainActor
+    func loginTMDB() async throws {
         self.flow = .authenticating
         Task {
             do {
@@ -53,23 +75,25 @@ class AuthenticationViewModel {
                     throw AuthenticationError.invalidSession
                 }
                 self.imdbSession = sessionId
+                UserDefaults.standard.setValue(sessionId, forKey: "session_id")
                 try await getAccount()
             } catch {
                 throw AuthenticationError.imdbAuthentication
             }
         }
     }
-    func logoutTMDB() throws {
-        Task {
-            do {
-                if try await deleteIMDBSession() {
-                    self.imdbSession = ""
-                    self.account = nil
-                    self.flow = .unauthenticated
-                }
-            } catch {
-                print("DEBUG - Error: \(error.localizedDescription)")
+    @MainActor
+    func logoutTMDB() async throws {
+        do {
+            if try await deleteIMDBSession() {
+                self.imdbSession = ""
+                self.account = nil
+                self.flow = .unauthenticated
+                print(self.flow)
+                UserDefaults.standard.removeObject(forKey: "session_id")
             }
+        } catch {
+            print("DEBUG - Error: \(error.localizedDescription)")
         }
     }
     
@@ -88,7 +112,6 @@ class AuthenticationViewModel {
             print(error.localizedDescription)
         }
     }
-    
     
     /// Token request for authenticaition
     private func requestIMDBToken() async throws -> String {

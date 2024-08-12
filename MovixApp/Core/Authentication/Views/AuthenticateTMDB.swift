@@ -36,17 +36,21 @@ struct AuthenticateTMDB: View {
 
     }
     private func login() {
-        do {
-            try viewModel.loginTMDB()
-        } catch {
-            showAlert.toggle()
+        Task {
+            do {
+                try await viewModel.loginTMDB()
+            } catch {
+                showAlert.toggle()
+            }
         }
     }
     private func logout() {
-        do {
-            try viewModel.logoutTMDB()
-        } catch {
-            print("Error in logout: \(error.localizedDescription)")
+        Task {
+            do {
+                try await viewModel.logoutTMDB()
+            } catch {
+                print("Error in logout: \(error.localizedDescription)")
+            }
         }
     }
 }

@@ -33,23 +33,24 @@ struct MediaRow: View {
                                             .frame(width: size.width * 0.4, height: 88)
                                     }
                                     .clipped()
-                                    .clipShape(RoundedRectangle(cornerRadius: 15))
+//                                    .clipShape(RoundedRectangle(cornerRadius: 15))
                                 case .failure:
                                     Image(systemName: "photo")
                                 @unknown default:
                                     Color.gray
                                 }
                             }
+                            .clipShape(RoundedRectangle(cornerRadius: 10))
                             if let formattedRate = NumberFormatter.popularity.string(from: NSNumber(value: voteAverage ?? 0.0)) {
                                 VStack(alignment: .leading) {
                                     ZStack(alignment: .center){
-                                        RoundedRectagleShape()
-                                            .fill(.black.opacity(0.5))
-                                        //                                .opacity(0.8)
+                                        UnevenRoundedRectangle(cornerRadii: .init(topLeading: 10, bottomTrailing: 10))
+                                            .fill(.black.opacity(0.8))
                                         Text(formattedRate)
                                             .foregroundStyle(.blue1)
+                                            .font(.system(size: 12))
                                     }
-                                    .frame(width: 45, height: 30)
+                                    .frame(width: 30, height: 20)
                                 }
                                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                             }
@@ -62,10 +63,10 @@ struct MediaRow: View {
                             .fontWeight(.semibold)
                             .foregroundStyle(.white)
                             .padding(.top, 8)
-                        
                     }
-                    .frame(maxHeight: .infinity, alignment: .top)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
                 }
+                .frame(maxWidth: size.width)
             }
             .padding(.vertical, 8)
         }
@@ -81,5 +82,5 @@ struct MediaRow: View {
         genres: ["Drama"],
         voteAverage: Movie.preview.voteAverage ?? 0.0
     )
-        .background(.bw20)
+    .background(.bw20)
 })

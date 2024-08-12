@@ -30,7 +30,6 @@ class NetworkManager {
         guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
             throw NetworkError.invalidResponse
         }
-        
         do {
             let decoder = JSONDecoder()
             return try decoder.decode(T.self, from: data)

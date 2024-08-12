@@ -10,7 +10,9 @@ import SwiftUI
 struct MainTabView: View {
     @State private var selectedTab: Tab = .home
     @Environment(AuthenticationViewModel.self) var authViewModel
+//    @EnvironmentObject var authViewModel: AuthenticationViewModel
     @State var viewModel = MoviesViewModel()
+    
     var body: some View {
         VStack {
             VStack(spacing: 0) {
@@ -22,7 +24,9 @@ struct MainTabView: View {
                 case .favourites:
                     FavouritesView()
                 case .profile:
-                    ProfileView(name: "Name", email: "mail@mail.com")
+                    ProfileView()
+                        .environment(authViewModel)
+//                        .environmentObject(authViewModel)
                 }
                 Spacer(minLength: 0)
                 CustomTabBar(selectedTab: $selectedTab)
@@ -37,5 +41,6 @@ struct MainTabView: View {
     NavigationStack {
         MainTabView()
             .environment(AuthenticationViewModel())
+//            .environmentObject(AuthenticationViewModel())
     }
 }

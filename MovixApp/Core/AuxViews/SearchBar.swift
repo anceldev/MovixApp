@@ -17,9 +17,8 @@ struct SearchBar: View {
                     .foregroundStyle(.white)
                     .padding(.leading, 12)
                     .padding(.trailing, 4)
-                TextField("Search", text: $searchTerm)
-                    .foregroundStyle(.white)
-                
+                TextField("Search...", text: $searchTerm, prompt: Text("Search...").foregroundStyle(.bw50))
+                    .tint(.bw90)
                 Button(action: {
                     searchTerm = ""
                 }, label: {

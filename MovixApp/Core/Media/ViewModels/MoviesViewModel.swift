@@ -11,12 +11,15 @@ import Observation
 @Observable
 final class MoviesViewModel {
     var movies: [Movie] = []
+    var movieGenres: [Genre] = []
     
     init() {
-        getTrending()
+        getTrendingMovies()
+        getMovieGenres()
     }
 
-    func getTrending() {
+    func getTrendingMovies() {
+
         Task {
             self.movies = await ApiTMDB.shared.getTrendingMovies()
         }
@@ -26,6 +29,15 @@ final class MoviesViewModel {
         Task {
             do {
                 self.movies = try await ApiTMDB.shared.searchMovies(searchTerm: searchTerm)
+            } catch {
+                print("DEBUG - Error: ApiTMDB error \(error.localizedDescription)")
+            }
+        }
+    }
+    func getMovieGenres() {
+        Task {
+            do {
+                self.movieGenres = try await ApiTMDB.shared.getMovieGenres(for: .movieGenres)
             } catch {
                 print("DEBUG - Error: ApiTMDB error \(error.localizedDescription)")
             }
