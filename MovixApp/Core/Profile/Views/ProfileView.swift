@@ -14,6 +14,10 @@ struct ProfileView: View {
     
     var body: some View {
         VStack {
+            Text("Account")
+                .font(.system(size: 22))
+                .foregroundStyle(.white)
+                .fontWeight(.semibold)
             VStack(spacing: 16) {
                 VStack(spacing: 10) {
                     Image(.profileDefault)
@@ -40,6 +44,7 @@ struct ProfileView: View {
                     .padding(.leading)
                 }
             }
+            Spacer()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(.bw10)

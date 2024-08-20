@@ -11,6 +11,7 @@ struct MovieView: View {
     
     var movie: Movie?
     var viewModel: CastViewModel
+    @Environment(AuthenticationViewModel.self) var authViewModel
     
     init(movie: Movie? = nil) {
         self.movie = movie
@@ -29,7 +30,8 @@ struct MovieView: View {
                             releasedDate: movie.releaseDate?.yearString ?? "NP",
                             size: geo.size
                         )
-                        MovieActionsBar()
+                        MovieActionsBar(idMovie: movie.id)
+                            .environment(authViewModel)
                         HStack {
                             GeneralInfo(cast: viewModel.cast, overview: movie.overview)
                         }

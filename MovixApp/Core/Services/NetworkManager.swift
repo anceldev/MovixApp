@@ -10,11 +10,7 @@ import Observation
 
 
 
-enum NetworkError: Error {
-    case invalidUrl
-    case invalidResponse
-    case invalidData
-}
+
 
 @Observable
 class NetworkManager {

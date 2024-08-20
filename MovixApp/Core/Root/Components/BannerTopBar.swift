@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+
 struct BannerTopBar: View {
     @Environment(\.dismiss) private var dismiss
     var body: some View {
@@ -23,14 +24,6 @@ struct BannerTopBar: View {
                     .labelStyle(.iconOnly)
                     .font(.title2)
             }
-//            Button(action: {
-//                print("Share...")
-//            }, label: {
-//                Label("Share", systemImage: "square.and.arrow.up")
-//                    .labelStyle(.iconOnly)
-//                    .font(.title2)
-//            })
-//            .opacity(0.6)
         }
         .opacity(0.6)
         .padding(8)

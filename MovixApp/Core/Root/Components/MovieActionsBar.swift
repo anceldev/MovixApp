@@ -7,9 +7,16 @@
 
 import SwiftUI
 
+
 struct MovieActionsBar: View {
-    let liked = false
-//    @Environment(AuthenticationViewModel.self) var authViewModel
+    let idMovie: Int
+    @Environment(AuthenticationViewModel.self) var authViewModel
+    var isFavorite: Bool {
+        guard let isFavorite = authViewModel.account?.favoriteMovies?.first(where: { $0.id == idMovie
+        }) else { return false }
+        return true
+    }
+    
     var body: some View {
         VStack {
             HStack(spacing: 34) {
@@ -38,16 +45,17 @@ struct MovieActionsBar: View {
                 })
                 .foregroundStyle(.bw50)
                 Button(action: {
+                    toggleFavorite()
                     print("My list")
                 }, label: {
                     VStack(spacing: 12) {
-                        Image(systemName: liked ? "heart.fill" : "heart")
+                        Image(systemName: isFavorite ? "heart.fill" : "heart")
                             .resizable()
                             .frame(width: 24, height: 24)
                         Text("My List")
                             .font(.system(size: 12))
                     }
-                    .foregroundStyle(liked ? .blue1 : .bw50)
+                    .foregroundStyle(isFavorite ? .blue1 : .bw50)
                 })
                 Button(action: {
                     print("Rate")
@@ -67,10 +75,19 @@ struct MovieActionsBar: View {
         .frame(maxWidth: .infinity)
         .background(.bw10)
     }
+    private func toggleFavorite() {
+        Task {
+            do {
+                try await authViewModel.toggleFavorite(id: idMovie, mediaType: .movie, isFavorite: isFavorite)
+            } catch {
+                print("Error adding favorite movie...")
+            }
+        }
+    }
 }
 
 #Preview {
-    MovieActionsBar()
+    MovieActionsBar(idMovie: 533535)
         .background(.bw20)
-//        .environment(AuthenticationViewModel())
+        .environment(AuthenticationViewModel())
 }

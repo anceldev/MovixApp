@@ -8,6 +8,7 @@
 import Foundation
 import Observation
 
+
 @Observable
 final class MoviesViewModel {
     var movies: [Movie] = []
@@ -25,7 +26,11 @@ final class MoviesViewModel {
         }
     }
     
+    
+    /// Searchs a movie
+    /// - Parameter searchTerm: query for search action
     func searchMovie(searchTerm: String) {
+        
         Task {
             do {
                 self.movies = try await ApiTMDB.shared.searchMovies(searchTerm: searchTerm)
@@ -34,6 +39,9 @@ final class MoviesViewModel {
             }
         }
     }
+    
+    
+    /// Get current movie genres
     func getMovieGenres() {
         Task {
             do {

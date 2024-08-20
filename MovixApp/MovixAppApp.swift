@@ -13,6 +13,7 @@ struct MovixAppApp: App {
         WindowGroup {
             NavigationStack {
                 ContentView()
+                    .environment(\.colorScheme, .dark)
             }
         }
     }

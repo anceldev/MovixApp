@@ -10,7 +10,6 @@ import SwiftUI
 struct ContentView: View {
     
    @State var authViewModel = AuthenticationViewModel()
-//    @StateObject var authViewModel = AuthenticationViewModel()
 
     var body: some View {
         VStack {
@@ -18,7 +17,6 @@ struct ContentView: View {
             case .authenticated:
                 MainTabView()
                     .environment(authViewModel)
-//                    .environmentObject(authViewModel)
             case .authenticating:
                 ProgressView()
             case .unauthenticated:

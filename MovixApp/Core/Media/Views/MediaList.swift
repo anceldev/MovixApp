@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct MediaList: View {
+    @Environment(AuthenticationViewModel.self) var authViewModel
     let movies: [Movie]
     var body: some View {
         ScrollView(.vertical) {
@@ -17,6 +18,7 @@ struct MediaList: View {
                         NavigationLink {
                             MovieView(movie: movie)
                                 .navigationBarBackButtonHidden()
+                                .environment(authViewModel)
                         } label: {
                             MediaRow(
                                 title: movie.title,

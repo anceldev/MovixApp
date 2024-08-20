@@ -9,15 +9,18 @@ import SwiftUI
 
 
 struct SearchMedia: View {
+    
     @State private var searchTerm: String = ""
     @State private var showFilterSheet: Bool = false
     @Bindable var viewModel: MoviesViewModel
     @Environment(AuthenticationViewModel.self) private var authViewModel
-//    @EnvironmentObject var authViewModel: AuthenticationViewModel
     
     var body: some View {
         VStack {
-            Text(authViewModel.account?.name ?? authViewModel.usernameTMDB)
+            Text("Search")
+                .font(.system(size: 22))
+                .foregroundStyle(.white)
+                .fontWeight(.semibold)
             SearchBar(
                 searchTerm: $searchTerm,
                 filterAction: {
@@ -25,6 +28,7 @@ struct SearchMedia: View {
                 }
             )
             MediaList(movies: viewModel.movies)
+                .environment(authViewModel)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(.bw10)
@@ -44,5 +48,4 @@ struct SearchMedia: View {
 #Preview {
     MainTabView()
         .environment(AuthenticationViewModel())
-//        .environmentObject(AuthenticationViewModel())
 }

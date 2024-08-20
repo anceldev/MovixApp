@@ -44,6 +44,7 @@
 		B469DC952C421576000A5F90 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B469DC942C421576000A5F90 /* LoginView.swift */; };
 		B469DC972C42215C000A5F90 /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B469DC962C42215C000A5F90 /* SignUpView.swift */; };
 		B469DC9B2C4222CA000A5F90 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B469DC9A2C4222CA000A5F90 /* ProfileView.swift */; };
+		B4BD2C032C6B5A0300A5518E /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4BD2C022C6B5A0300A5518E /* Account.swift */; };
 		B4C93F9E2C52749E0034DD0B /* MediaTabs.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4C93F9D2C52749E0034DD0B /* MediaTabs.swift */; };
 		B4C93FA02C52989C0034DD0B /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4C93F9F2C52989C0034DD0B /* NetworkManager.swift */; };
 		B4C93FA32C529B630034DD0B /* Movie.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4C93FA22C529B630034DD0B /* Movie.swift */; };
@@ -100,6 +101,7 @@
 		B469DC942C421576000A5F90 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		B469DC962C42215C000A5F90 /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
 		B469DC9A2C4222CA000A5F90 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		B4BD2C022C6B5A0300A5518E /* Account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
 		B4C93F9D2C52749E0034DD0B /* MediaTabs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaTabs.swift; sourceTree = "<group>"; };
 		B4C93F9F2C52989C0034DD0B /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		B4C93FA22C529B630034DD0B /* Movie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Movie.swift; sourceTree = "<group>"; };
@@ -242,7 +244,9 @@
 		B469DC7A2C42067A000A5F90 /* MovixApp */ = {
 			isa = PBXGroup;
 			children = (
-				B469DC8A2C420A32000A5F90 /* App */,
+				B469DC7B2C42067A000A5F90 /* MovixAppApp.swift */,
+				B469DC7D2C42067A000A5F90 /* ContentView.swift */,
+				B4C93FA62C52A4D60034DD0B /* deadpooljson.json */,
 				B469DC8B2C420A37000A5F90 /* Core */,
 				B469DC892C42079C000A5F90 /* Resources */,
 			);
@@ -264,16 +268,6 @@
 				B469DC7F2C42067B000A5F90 /* Assets.xcassets */,
 			);
 			path = Resources;
-			sourceTree = "<group>";
-		};
-		B469DC8A2C420A32000A5F90 /* App */ = {
-			isa = PBXGroup;
-			children = (
-				B469DC7B2C42067A000A5F90 /* MovixAppApp.swift */,
-				B469DC7D2C42067A000A5F90 /* ContentView.swift */,
-				B4C93FA62C52A4D60034DD0B /* deadpooljson.json */,
-			);
-			path = App;
 			sourceTree = "<group>";
 		};
 		B469DC8B2C420A37000A5F90 /* Core */ = {
@@ -304,8 +298,9 @@
 		B469DC922C421563000A5F90 /* Authentication */ = {
 			isa = PBXGroup;
 			children = (
-				B4111FA12C5A996D00657258 /* ViewModels */,
+				B4BD2C012C6B59E700A5518E /* Models */,
 				B469DC932C421567000A5F90 /* Views */,
+				B4111FA12C5A996D00657258 /* ViewModels */,
 			);
 			path = Authentication;
 			sourceTree = "<group>";
@@ -335,6 +330,14 @@
 				B4FE2A632C4ADB6E009EF6C5 /* SettingsList.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		B4BD2C012C6B59E700A5518E /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				B4BD2C022C6B5A0300A5518E /* Account.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 		B4C93FA12C529B560034DD0B /* Models */ = {
@@ -506,6 +509,7 @@
 				B42BE0BD2C57A54A00EA19D2 /* MovieViewModel.swift in Sources */,
 				B4C93F9E2C52749E0034DD0B /* MediaTabs.swift in Sources */,
 				B42BE0CE2C57E70D00EA19D2 /* CastViewModel.swift in Sources */,
+				B4BD2C032C6B5A0300A5518E /* Account.swift in Sources */,
 				B4111FA92C5AF7F600657258 /* MainTabView.swift in Sources */,
 				B42BE0CB2C57E48900EA19D2 /* Credits.swift in Sources */,
 				B469DC7C2C42067A000A5F90 /* MovixAppApp.swift in Sources */,
