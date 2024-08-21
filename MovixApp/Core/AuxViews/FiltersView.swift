@@ -20,6 +20,15 @@ struct FiltersView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color(hex: "#1F1F1F").opacity(0.75))
+        .onAppear(perform: {
+            showGenres()
+        })
+    }
+    private func showGenres() {
+        for genre in Genres.combinedGenres {
+            print(genre.name)
+        }
+//        print(Genres.combinedGenres)
     }
 }
 

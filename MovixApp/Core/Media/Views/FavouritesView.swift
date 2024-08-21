@@ -17,7 +17,7 @@ struct FavouritesView: View {
                 .foregroundStyle(.white)
                 .fontWeight(.semibold)
             if let favorites = authViewModel.account?.favoriteMovies {
-                MediaList(movies: favorites)
+                MediaList(movies: favorites, fetchAction: .favMovies)
             } else {
                 Text("No favorite movies added")
                     .foregroundStyle(.white)

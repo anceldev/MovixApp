@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-let genres = ["USA", "Comedy", "Fantasy", "FullHD"]
+let genres: [String] = ["Action", "Adventure"]
 
 struct PosterView: View {
     
@@ -18,7 +18,6 @@ struct PosterView: View {
     let size: CGSize
     
     var body: some View {
-
         ZStack {
             AsyncImage(url: posterURL) { phase in
                 switch phase {
@@ -27,7 +26,6 @@ struct PosterView: View {
                 case .success(let image):
                     image
                         .resizable()
-//                        .aspectRatio(contentMode: .fit)
                         .scaledToFill()
                         .frame(width: size.width, height: size.height * 0.75, alignment: .top)
                 case .failure:
@@ -45,16 +43,17 @@ struct PosterView: View {
                     .init(color: .bw10, location: 1)
                 ],
                 startPoint: .bottom,
-                endPoint: .top)
+                endPoint: .top
+            )
             VStack {
                 Spacer()
 
                 Button(action: {
                     print("Playing moview...")
                 }, label: {
-                    Label("Play", systemImage: "play.fill")
-                        .font(.system(size: 20))
-                        .padding(.horizontal, 28)
+                    Label("Providers", systemImage: "play.display")
+                        .font(.system(size: 18))
+                        .padding(.horizontal, 16)
                 })
                 .buttonStyle(.capsuleButton(height: 44))
                 .animation(
@@ -64,6 +63,16 @@ struct PosterView: View {
                         )
                 
                 .padding(.top, -12)
+                
+//                NavigationLink {
+//                    VideoPlayerView()
+//                } label: {
+//                    Label("Play", systemImage: "play.fill")
+//                        .font(.system(size: 20))
+//                        .padding(.horizontal, 28)
+//                }
+                
+                
                 VStack(spacing: 8) {
                     HStack {
                         ForEach(genres, id: \.self) { genre in
@@ -86,7 +95,6 @@ struct PosterView: View {
             .foregroundStyle(.white)
         }
         .frame(maxWidth: .infinity)
-
     }
 }
 
@@ -95,4 +103,5 @@ struct PosterView: View {
 //}
 #Preview(body: {
     MovieView(movie: Movie.preview)
+        .environment(AuthenticationViewModel())
 })

@@ -12,20 +12,35 @@ import Observation
 @Observable
 final class MoviesViewModel {
     var movies: [Movie] = []
+    
+    private var trendingMoviesPages: Int = 0
+    private var searchMoviesPages: Int = 0
+    private var favoriteMoviesPages: Int = 0
+    
     var movieGenres: [Genre] = []
     
     init() {
-        getTrendingMovies()
-        getMovieGenres()
+        getTrendingMovies(page: 1)
+//        getMovieGenres()
     }
 
-    func getTrendingMovies() {
-
+    func getTrendingMovies(page: Int) {
         Task {
-            self.movies = await ApiTMDB.shared.getTrendingMovies()
+            if page == 1 {
+                self.movies = []
+            }
+            let fetchedPage = await ApiTMDB.shared.getTrendingMovies(page: page)
+            self.movies.append(contentsOf: fetchedPage)
         }
     }
     
+    func isLastItem(id: Int) -> Bool {
+        let index = self.movies.firstIndex { $0.id == id }
+        if index == self.movies.count - 1 {
+            return true
+        }
+        return false
+    }
     
     /// Searchs a movie
     /// - Parameter searchTerm: query for search action

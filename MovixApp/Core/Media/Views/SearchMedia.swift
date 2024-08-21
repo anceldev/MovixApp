@@ -27,14 +27,15 @@ struct SearchMedia: View {
                     showFilterSheet = true
                 }
             )
-            MediaList(movies: viewModel.movies)
+            MediaList(movies: viewModel.movies, fetchAction: searchTerm == "" ? .trending : .search)
                 .environment(authViewModel)
+                .environment(viewModel)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(.bw10)
         .onChange(of: searchTerm) {
             if searchTerm == "" {
-                viewModel.getTrendingMovies()
+                viewModel.getTrendingMovies(page: 1)
             } else {
                 viewModel.searchMovie(searchTerm: searchTerm)
             }

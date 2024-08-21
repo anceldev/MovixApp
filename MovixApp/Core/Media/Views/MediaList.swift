@@ -8,13 +8,25 @@
 import SwiftUI
 
 struct MediaList: View {
+    
+    enum FetchAction {
+        case trending
+        case search
+        case favMovies
+    }    
+    
     @Environment(AuthenticationViewModel.self) var authViewModel
+    @Environment(MoviesViewModel.self) var moviesViewModel
+    @State private var currentPage = 1
+
     let movies: [Movie]
+    let fetchAction: FetchAction
+
     var body: some View {
         ScrollView(.vertical) {
             if movies.count > 0 {
                 LazyVStack(alignment: .leading) {
-                    ForEach(movies) { movie in
+                    ForEach(moviesViewModel.movies) { movie in
                         NavigationLink {
                             MovieView(movie: movie)
                                 .navigationBarBackButtonHidden()
@@ -26,6 +38,12 @@ struct MediaList: View {
                                 genres: ["Test"],
                                 voteAverage: movie.voteAverage)
                         }
+                        .onAppear(perform: {
+                            if moviesViewModel.isLastItem(id: movie.id) {
+                                self.currentPage += 1
+                                moviesViewModel.getTrendingMovies(page: currentPage)
+                            }
+                        })
                     }
                 }
                 .padding()
@@ -37,5 +55,10 @@ struct MediaList: View {
 }
 
 #Preview {
-    MediaList(movies: [Movie.preview])
+    VStack {
+        MediaList(movies: [Movie.preview], fetchAction: .trending)
+            .environment(AuthenticationViewModel())
+            .environment(MoviesViewModel())
+    }
+    .background(.bw10)
 }

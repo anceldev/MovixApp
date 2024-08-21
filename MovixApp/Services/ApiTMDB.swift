@@ -66,13 +66,13 @@ class ApiTMDB {
         return nil
     }
 
-    func getTrendingMovies() async -> [Movie] {
+    func getTrendingMovies(page: Int) async -> [Movie] {
         let baseSearch = Endpoint.trending
         let mediaSearch = Endpoint.movie
         let timeWindow = TimeWindow.day
         
         do {
-            let urlString = baseEndpoint + baseSearch.rawValue + "/" + mediaSearch.rawValue + "/" + timeWindow.rawValue + "?api_key=\(self.apiKey)"
+            let urlString = baseEndpoint + baseSearch.rawValue + "/" + mediaSearch.rawValue + "/" + timeWindow.rawValue + "?api_key=\(self.apiKey)" + "&page=\(page)"
             guard let url = URL(string: urlString) else {
                 throw NetworkError.invalidUrl
             }
@@ -241,21 +241,9 @@ class ApiTMDB {
         }
     }
     private func fetchData<T: Decodable>(data: T.Type, from request: URLRequest) async throws -> T {
-//        guard let url = url else {
-//            throw NetworkError.invalidUrl
-//        }
-//        let request = URLRequest(url: url)
-//    private func fetchData<T: Decodable>(data: T.Type, from url: URL?) async throws -> T {
-//        guard let url = url else {
-//            throw NetworkError.invalidUrl
-//        }
-//        let request = URLRequest(url: url)
+
         let (data, response) = try await URLSession.shared.data(for: request)
-//        let (data, response) = try await URLSession.shared.data(from: url)
-        
-//        guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
-//            throw NetworkError.invalidResponse
-//        }
+
         guard let response = response as? HTTPURLResponse else {
             throw NetworkError.invalidResponse
         }

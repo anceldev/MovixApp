@@ -64,7 +64,7 @@ struct MediaRow: View {
                             .foregroundStyle(.white)
                             .padding(.top, 8)
                     }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                 }
                 .frame(maxWidth: size.width)
             }

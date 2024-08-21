@@ -52,5 +52,6 @@ struct MovieView: View {
 }
 #Preview(body: {
     MovieView(movie: Movie.preview)
+        .environment(AuthenticationViewModel())
 })
 

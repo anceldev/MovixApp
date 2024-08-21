@@ -60,6 +60,14 @@ struct LoginView: View {
                     .font(.system(size: 14))
                     .foregroundStyle(.bw50)
                     .padding(.top, 2)
+                    Spacer()
+                    VStack {
+                        Text("Don't have an account?")
+                            .foregroundStyle(.bw50)
+                            .font(.system(size: 16))
+                        Link("Join TMDB", destination: URL(string: "https://www.themoviedb.org/signup")!)
+                            .foregroundStyle(.blue1)
+                    }
                 }
                 Spacer()
             }
@@ -104,5 +112,7 @@ struct LoginView: View {
     preview.account?.id = 1
     preview.account?.name = "Name"
     preview.account?.username = "Username"
-    return LoginView(viewModel: preview)
+    return NavigationStack {
+        LoginView(viewModel: preview)
+    }
 })

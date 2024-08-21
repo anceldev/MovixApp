@@ -12,8 +12,8 @@ struct MovieActionsBar: View {
     let idMovie: Int
     @Environment(AuthenticationViewModel.self) var authViewModel
     var isFavorite: Bool {
-        guard let isFavorite = authViewModel.account?.favoriteMovies?.first(where: { $0.id == idMovie
-        }) else { return false }
+        guard (authViewModel.account?.favoriteMovies?.first(where: { $0.id == idMovie
+        })) != nil else { return false }
         return true
     }
     

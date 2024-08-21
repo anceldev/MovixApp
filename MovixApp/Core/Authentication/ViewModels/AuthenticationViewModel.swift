@@ -86,6 +86,7 @@ class AuthenticationViewModel {
                 self.imdbSession = sessionId
                 UserDefaults.standard.setValue(sessionId, forKey: "session_id")
                 try await getAccount()
+                try await getFavoriteMoviews(page: 1)
             } catch {
                 throw AuthenticationError.imdbAuthentication
             }

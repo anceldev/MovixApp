@@ -11,7 +11,7 @@ struct SearchBar: View {
     @Binding var searchTerm: String
     var filterAction: () -> Void
     var body: some View {
-        HStack {
+        HStack(spacing: 16) {
             HStack {
                 Image(systemName: "magnifyingglass")
                     .foregroundStyle(.white)
@@ -32,7 +32,9 @@ struct SearchBar: View {
             .frame(maxWidth: .infinity, maxHeight: 44)
             .background(.bw40)
             .clipShape(RoundedRectangle(cornerRadius: 12))
-            .padding(.horizontal)
+            .padding(.leading, 16)
+//            .padding(.horizontal)
+            
             Button(action: {
                 filterAction()
             }, label: {
@@ -40,7 +42,8 @@ struct SearchBar: View {
                     .labelStyle(.iconOnly)
                     .foregroundStyle(.white)
             })
-            .frame(width: 62, height: 42)
+            .frame(height: 42)
+            .padding(.trailing, 16)
         }
         .frame(maxWidth: .infinity)
         .frame(height: 44)
