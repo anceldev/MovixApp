@@ -103,5 +103,5 @@ struct PosterView: View {
 //}
 #Preview(body: {
     MovieView(movie: Movie.preview)
-        .environment(AuthenticationViewModel())
+        .environment(AuthViewModel())
 })

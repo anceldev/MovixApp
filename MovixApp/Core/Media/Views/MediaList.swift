@@ -15,7 +15,7 @@ struct MediaList: View {
         case favMovies
     }    
     
-    @Environment(AuthenticationViewModel.self) var authViewModel
+    @Environment(AuthViewModel.self) var authViewModel
     @Environment(MoviesViewModel.self) var moviesViewModel
     @State private var currentPage = 1
 
@@ -26,7 +26,7 @@ struct MediaList: View {
         ScrollView(.vertical) {
             if movies.count > 0 {
                 LazyVStack(alignment: .leading) {
-                    ForEach(moviesViewModel.movies) { movie in
+                    ForEach(movies) { movie in
                         NavigationLink {
                             MovieView(movie: movie)
                                 .navigationBarBackButtonHidden()
@@ -55,10 +55,12 @@ struct MediaList: View {
 }
 
 #Preview {
-    VStack {
-        MediaList(movies: [Movie.preview], fetchAction: .trending)
-            .environment(AuthenticationViewModel())
-            .environment(MoviesViewModel())
+    NavigationStack {
+        VStack {
+            MediaList(movies: [Movie.preview], fetchAction: .trending)
+                .environment(AuthViewModel())
+                .environment(MoviesViewModel())
+        }
+        .background(.bw10)
     }
-    .background(.bw10)
 }

@@ -12,7 +12,7 @@ struct LoginView: View {
         case username, password
     }
     
-    @Bindable var viewModel: AuthenticationViewModel
+    @Bindable var viewModel: AuthViewModel
 //    @ObservedObject var viewModel: AuthenticationViewModel
     @FocusState private var focusedField: FocusedField?
     
@@ -108,7 +108,7 @@ struct LoginView: View {
 }
 
 #Preview(traits: .sizeThatFitsLayout, body: {
-    @State var preview = AuthenticationViewModel()
+    @Previewable @State var preview = AuthViewModel()
     preview.account?.id = 1
     preview.account?.name = "Name"
     preview.account?.username = "Username"

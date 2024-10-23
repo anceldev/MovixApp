@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ProfileView: View {
     
-    @Environment(AuthenticationViewModel.self) var authViewModel
+    @Environment(AuthViewModel.self) var authViewModel
     
     var body: some View {
         VStack {
@@ -63,7 +63,7 @@ struct ProfileView: View {
 #Preview {
     NavigationStack {
         ProfileView()
-            .environment(AuthenticationViewModel())
+            .environment(AuthViewModel())
 //            .environmentObject(AuthenticationViewModel())
     }
 }

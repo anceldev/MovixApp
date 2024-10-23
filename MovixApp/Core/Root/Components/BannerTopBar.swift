@@ -25,7 +25,7 @@ struct BannerTopBar: View {
                     .font(.title2)
             }
         }
-        .opacity(0.6)
+//        .opacity(0.6)
         .padding(8)
         .padding(.horizontal)
         .font(.system(size: 20))
@@ -33,7 +33,3 @@ struct BannerTopBar: View {
         .frame(maxWidth: .infinity)
     }
 }
-#Preview(body: {
-    MovieView(movie: Movie.preview)
-})
-

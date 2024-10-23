@@ -48,6 +48,7 @@ class ApiTMDB {
         return URL(string: endpoint)
     }
 
+    @MainActor
     func getMovieDetails(id: Int) async -> Movie? {
         do {
             let url = buildUrl(type: .movie, id: id)!
@@ -66,6 +67,7 @@ class ApiTMDB {
         return nil
     }
 
+    @MainActor
     func getTrendingMovies(page: Int) async -> [Movie] {
         let baseSearch = Endpoint.trending
         let mediaSearch = Endpoint.movie
@@ -91,6 +93,7 @@ class ApiTMDB {
         return []
     }
     
+    @MainActor
     func searchMovies(searchTerm: String) async throws -> [Movie] {
         let endpoint = Endpoint.search
         let mediaSearch = Endpoint.movie
@@ -132,6 +135,7 @@ class ApiTMDB {
         return []
     }
     
+    @MainActor
     func setFavoriteMovie(for id: Int, account accountId: Int, withSession session: String) {
         let endpoint = "https://api.themoviedb.org/3/account/\(accountId)/favorite?\(session)"
         print(endpoint)
@@ -203,6 +207,7 @@ class ApiTMDB {
         return favoriteMovies.results
     }
     
+    @MainActor
     /// Add or remove a movie to favorites list of related account
     func toggleFavorite(id: Int, mediaType: MediaType, isFavorite: Bool, accountId: Int, sessionId: String) async throws -> Int {
         let parameters = [

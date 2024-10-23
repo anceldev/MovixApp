@@ -3,11 +3,11 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B4111FA02C5A996900657258 /* AuthenticationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4111F9F2C5A996900657258 /* AuthenticationViewModel.swift */; };
+		B4111FA02C5A996900657258 /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4111F9F2C5A996900657258 /* AuthViewModel.swift */; };
 		B4111FA32C5AAE2F00657258 /* AuthenticateTMDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4111FA22C5AAE2F00657258 /* AuthenticateTMDB.swift */; };
 		B4111FA92C5AF7F600657258 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4111FA82C5AF7F600657258 /* MainTabView.swift */; };
 		B4111FAB2C5AF80000657258 /* Tab.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4111FAA2C5AF80000657258 /* Tab.swift */; };
@@ -65,7 +65,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		B4111F9F2C5A996900657258 /* AuthenticationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationViewModel.swift; sourceTree = "<group>"; };
+		B4111F9F2C5A996900657258 /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
 		B4111FA22C5AAE2F00657258 /* AuthenticateTMDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticateTMDB.swift; sourceTree = "<group>"; };
 		B4111FA82C5AF7F600657258 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
 		B4111FAA2C5AF80000657258 /* Tab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tab.swift; sourceTree = "<group>"; };
@@ -123,6 +123,10 @@
 		B4FE2A712C4AF1A3009EF6C5 /* BannerTopBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerTopBar.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		B4DC758F2CC7141D00633316 /* SecureAPIKeys */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = SecureAPIKeys; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
+
 /* Begin PBXFrameworksBuildPhase section */
 		B469DC752C42067A000A5F90 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
@@ -137,7 +141,7 @@
 		B4111FA12C5A996D00657258 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
-				B4111F9F2C5A996900657258 /* AuthenticationViewModel.swift */,
+				B4111F9F2C5A996900657258 /* AuthViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -229,6 +233,7 @@
 		B469DC7A2C42067A000A5F90 /* MovixApp */ = {
 			isa = PBXGroup;
 			children = (
+				B4DC758F2CC7141D00633316 /* SecureAPIKeys */,
 				B469DC7B2C42067A000A5F90 /* MovixAppApp.swift */,
 				B469DC7D2C42067A000A5F90 /* ContentView.swift */,
 				B4C93FA62C52A4D60034DD0B /* deadpooljson.json */,
@@ -387,6 +392,9 @@
 			);
 			dependencies = (
 			);
+			fileSystemSynchronizedGroups = (
+				B4DC758F2CC7141D00633316 /* SecureAPIKeys */,
+			);
 			name = MovixApp;
 			productName = MovixApp;
 			productReference = B469DC782C42067A000A5F90 /* MovixApp.app */;
@@ -468,7 +476,7 @@
 				B4DAF2D12C4BE50600178180 /* GeneralInfo.swift in Sources */,
 				B42BE0C92C57DA9800EA19D2 /* People.swift in Sources */,
 				B4FE2A722C4AF1A3009EF6C5 /* BannerTopBar.swift in Sources */,
-				B4111FA02C5A996900657258 /* AuthenticationViewModel.swift in Sources */,
+				B4111FA02C5A996900657258 /* AuthViewModel.swift in Sources */,
 				B4390BF72C5821C700AEAB70 /* PopularityFormatter.swift in Sources */,
 				B4111FAD2C5AFA6100657258 /* TabBarButton.swift in Sources */,
 				B45745D82C592DF8004DB511 /* PeopleView.swift in Sources */,
@@ -646,9 +654,13 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.anceldev.MovixApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -675,9 +687,13 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.anceldev.MovixApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

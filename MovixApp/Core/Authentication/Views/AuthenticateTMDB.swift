@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct AuthenticateTMDB: View {
-    @State var viewModel = AuthenticationViewModel()
+    @State var viewModel = AuthViewModel()
     @State var showAlert = false
     var body: some View {
         if viewModel.account == nil {

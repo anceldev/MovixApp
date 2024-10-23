@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct FavouritesView: View {
-    @Environment(AuthenticationViewModel.self) var authViewModel
+    @Environment(AuthViewModel.self) var authViewModel
+    @Environment(MoviesViewModel.self) var moviesViewModel
     @State private var showFilterSheet = false
     var body: some View {
         VStack {
@@ -18,6 +19,7 @@ struct FavouritesView: View {
                 .fontWeight(.semibold)
             if let favorites = authViewModel.account?.favoriteMovies {
                 MediaList(movies: favorites, fetchAction: .favMovies)
+                    .environment(moviesViewModel)
             } else {
                 Text("No favorite movies added")
                     .foregroundStyle(.white)
@@ -29,10 +31,15 @@ struct FavouritesView: View {
         .sheet(isPresented: $showFilterSheet, content: {
             FiltersView()
         })
+        .onAppear {
+            Task {
+                try await authViewModel.getFavoriteMoviews(page: 1)
+            }
+        }
     }
 }
 
 #Preview {
     FavouritesView()
-        .environment(AuthenticationViewModel())
+        .environment(AuthViewModel())
 }

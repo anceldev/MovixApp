@@ -10,7 +10,7 @@ import SwiftUI
 
 struct MovieActionsBar: View {
     let idMovie: Int
-    @Environment(AuthenticationViewModel.self) var authViewModel
+    @Environment(AuthViewModel.self) var authViewModel
     var isFavorite: Bool {
         guard (authViewModel.account?.favoriteMovies?.first(where: { $0.id == idMovie
         })) != nil else { return false }
@@ -89,5 +89,5 @@ struct MovieActionsBar: View {
 #Preview {
     MovieActionsBar(idMovie: 533535)
         .background(.bw20)
-        .environment(AuthenticationViewModel())
+        .environment(AuthViewModel())
 }

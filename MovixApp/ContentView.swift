@@ -8,19 +8,17 @@
 import SwiftUI
 
 struct ContentView: View {
-    
-   @State var authViewModel = AuthenticationViewModel()
-
+   @State var authVM = AuthViewModel()
     var body: some View {
         VStack {
-            switch authViewModel.flow {
+            switch authVM.flow {
             case .authenticated:
                 MainTabView()
-                    .environment(authViewModel)
+                    .environment(authVM)
             case .authenticating:
                 ProgressView()
             case .unauthenticated:
-                LoginView(viewModel: authViewModel)
+                LoginView(viewModel: authVM)
             }
         }
     }

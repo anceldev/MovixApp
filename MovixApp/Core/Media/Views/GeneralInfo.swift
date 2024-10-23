@@ -28,7 +28,6 @@ struct GeneralInfo: View {
                             withAnimation {
                                 if(viewMore != nil) {
                                     viewMore = nil
-                                    
                                 } else {
                                     viewMore = 3
                                 }
@@ -44,18 +43,14 @@ struct GeneralInfo: View {
                         ForEach(cast) { actor in
                             NavigationLink {
                                 PeopleView(id: actor.id)
+                                    .navigationBarBackButtonHidden()
                             } label: {
                                 ActorLink(
                                     imageUrl: actor.profilePath, name:
                                         actor.originalName)
                             }
-                            
                         }
                     }
-                    .navigationDestination(for: String.self) { actor in
-                        Text("Individual view for an actor")
-                    }
-                    
                 }
                 .scrollIndicators(.hidden)
             }

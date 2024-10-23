@@ -9,22 +9,32 @@ import Foundation
 import Observation
 import SwiftUI
 
-enum AuthenticationError: Error {
+enum AuthError: Error {
     case invalidTokenResponse
     case tokenRequestFailure
     case tokenDecodeFailure
     case invalidTokenRequest
-    
     case statusCodeFailure
-    
     case invalidLoginToken
-    
     case sessionFailure
     case invalidSession
-    
     case imdbAuthentication
-    
     case logoutError
+    
+    var errorMessage: String {
+        switch self {
+        case .invalidTokenResponse: "Invalid token response"
+        case .tokenRequestFailure: "Token request failure"
+        case .tokenDecodeFailure: "Token decode failure"
+        case .invalidTokenRequest: "Invalid toke request"
+        case .statusCodeFailure: "Status code failure"
+        case .invalidLoginToken: "Can't login with token"
+        case .sessionFailure: "Session failuer"
+        case .invalidSession: "Invalid session"
+        case .imdbAuthentication: "IMDB Error"
+        case .logoutError: "Can't logout account"
+        }
+    }
 }
 
 enum AuthenticationFlow {
@@ -34,39 +44,48 @@ enum AuthenticationFlow {
 }
 
 @Observable
-class AuthenticationViewModel {
+class AuthViewModel {
     
     var account: Account?
     var flow: AuthenticationFlow = .unauthenticated
+
+//    let apiKey: String = "4bd71d332c3d3c219fe01c8d465ba03a"
     
-    private var imdbSession = ""
-    private let apiKey = "4bd71d332c3d3c219fe01c8d465ba03a"
+    var usernameTMDB: String = ""
+    var passwordTMDB: String = ""
     
-    var usernameTMDB = ""
-    var passwordTMDB = ""
-    
-    
+    private var imdbSession: String = ""
+    private var httpHeaderFields: [String : String] = [
+        "Accept" : "applicaiton/json",
+        "content-type": "application/json",
+        "Authorization": "Bearer \("API_KEY")"
+    ]
+    private var shortHttpHeaderFields: [String : String] = [
+        "Accept" : "applicaiton/json",
+        "Authorization": "Bearer \("API_KEY")"
+    ]
+     
+    private var timeoutInterval: Double = 10
     
     /// Loads the current session if exists.
     /// Fetchs account data with that session.
+    @MainActor
     init(){
         let currentSessionId = UserDefaults.standard.string(forKey: "session_id")
-        
         if currentSessionId != nil {
             self.imdbSession = currentSessionId!
             Task {
                 do {
-                    try await getAccount()
-                    try await getFavoriteMoviews(page: 1)
+                    try await getAccount(endpoint: .getAccount(sessionId: self.imdbSession))
+//                    try await getFavoriteMoviews(page: 1)
                 } catch {
-                    throw AuthenticationError.imdbAuthentication
+                    throw AuthError.imdbAuthentication
                 }
             }
         } else {
             print("No session in userdefaults")
         }
     }
-
     
     /// Login account
     /// First request a IMDB token, validates the token with loging and creates a session with that validated token.
@@ -78,17 +97,17 @@ class AuthenticationViewModel {
             do {
                 let token = try await requestIMDBToken()
                 guard let loginToken = try await validateRequestTokenWithLogin(token: token) else {
-                    throw AuthenticationError.invalidLoginToken
+                    throw AuthError.invalidLoginToken
                 }
                 guard let sessionId = try await createSession(token: loginToken) else {
-                    throw AuthenticationError.invalidSession
+                    throw AuthError.invalidSession
                 }
                 self.imdbSession = sessionId
                 UserDefaults.standard.setValue(sessionId, forKey: "session_id")
-                try await getAccount()
-                try await getFavoriteMoviews(page: 1)
+                try await getAccount(endpoint: .getAccount(sessionId: imdbSession))
+//                try await getFavoriteMoviews(page: 1)
             } catch {
-                throw AuthenticationError.imdbAuthentication
+                throw AuthError.imdbAuthentication
             }
         }
     }
@@ -109,12 +128,12 @@ class AuthenticationViewModel {
         }
     }
     
-    
     /// Get the user account info using the session token
-    private func getAccount() async throws {
-        let urlString = "https://api.themoviedb.org/3/account?api_key=\(apiKey)&session_id=" + self.imdbSession
-        let url = URL(string: urlString)!
-        
+    @MainActor
+    private func getAccount(endpoint: AuthEndpoint) async throws {
+//        let urlString = "https://api.themoviedb.org/3/account?api_key=\(apiKey)&session_id=" + self.imdbSession
+//        let url = URL(string: urlString)!
+        let url = endpoint.url
         do {
             let (data, _) = try await URLSession.shared.data(from: url)
             let decoder = JSONDecoder()
@@ -127,68 +146,60 @@ class AuthenticationViewModel {
         }
     }
     
-    
     /// Request a token for login
     /// - Returns: token
-    private func requestIMDBToken() async throws -> String {
-        let url = URL(string: "https://api.themoviedb.org/3/authentication/token/new?api_key=\(apiKey)")!
+    private func requestIMDBToken(endpoint: AuthEndpoint = .requestToken) async throws -> String {
+        let url = endpoint.url
         var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-        request.timeoutInterval = 10
-        request.allHTTPHeaderFields = [
-            "Accept" : "application/json",
-            "Authorization": "Bearer \(apiKey)"
-        ]
+        request.httpMethod = endpoint.httpMethod
+        request.timeoutInterval = timeoutInterval
+        request.allHTTPHeaderFields = shortHttpHeaderFields
         do {
             let (data, _) = try await URLSession.shared.data(for: request)
             let decoder = JSONDecoder()
             let tokenRequest = try decoder.decode(AuthRequest.self, from: data)
-            if !tokenRequest.success!  {
-                throw AuthenticationError.tokenRequestFailure
+            if !tokenRequest.success! {
+                throw AuthError.tokenRequestFailure
             }
             return tokenRequest.token!
         } catch {
             print("DEBUG - Error: Error decoding token")
-            throw AuthenticationError.invalidTokenRequest
+            throw AuthError.invalidTokenRequest
         }
     }
-    
     
     /// Validates a requested token with login
     /// - Parameter token: requested token
     /// - Returns: validated token
-    private func validateRequestTokenWithLogin(token: String) async throws -> String? {
+    private func validateRequestTokenWithLogin(endpoint: AuthEndpoint = .validateTokenWithLogin, token: String) async throws -> String? {
         let parameters = [
-            "username": self.usernameTMDB,
-            "password": self.passwordTMDB,
-            "request_token": token,
+            "username" : self.usernameTMDB,
+            "password" : self.passwordTMDB,
+            "request_token" : token,
         ] as [String : Any?]
         do {
             let postData = try JSONSerialization.data(withJSONObject: parameters, options: [])
-            let url = URL(string: "https://api.themoviedb.org/3/authentication/token/validate_with_login?api_key=\(apiKey)")!
+            let url = endpoint.url
             var request = URLRequest(url: url)
-            request.httpMethod = "POST"
-            request.timeoutInterval = 10
-            request.allHTTPHeaderFields = [
-                "accept": "application/json",
-                "content-type": "application/json",
-                "Authorization": "Bearer \(apiKey)"
-            ]
+            request.httpMethod = endpoint.httpMethod
+            request.timeoutInterval = timeoutInterval
+            request.allHTTPHeaderFields = httpHeaderFields
             request.httpBody = postData
             let (data, _) = try await URLSession.shared.data(for: request)
             let decoder = JSONDecoder()
             let session = try decoder.decode(AuthRequest.self, from: data)
             if !session.success! {
-                throw AuthenticationError.sessionFailure
+                throw AuthError.sessionFailure
             }
             return session.token
-        } catch AuthenticationError.invalidTokenResponse {
-            print("DEBUG - Error: Invalid response")
-        } catch AuthenticationError.sessionFailure {
-            print("DEBUG - Error: Invalid session")
+        } catch AuthError.invalidTokenResponse {
+            print("DEBUG - \(AuthError.invalidTokenResponse.errorMessage)")
+        }
+        catch AuthError.sessionFailure {
+            print("DEBUG - Error: \(AuthError.sessionFailure.errorMessage)")
         } catch {
             print("DEBUG - Error: Unknown error \(error.localizedDescription)")
-            throw AuthenticationError.invalidSession
+            throw AuthError.invalidSession
         }
         return nil
     }
@@ -196,22 +207,18 @@ class AuthenticationViewModel {
     /// Creates a new session on TMDB Api
     /// - Parameter token: requested token
     /// - Returns: session token
-    private func createSession(token: String) async throws -> String? {
+    private func createSession(endoint: AuthEndpoint = .createESession, token: String) async throws -> String? {
         let parameters = [
             "request_token": token
         ] as [String : Any?]
         
         let postData = try JSONSerialization.data(withJSONObject: parameters, options: [])
         
-        let url = URL(string: "https://api.themoviedb.org/3/authentication/session/new?api_key=\(apiKey)")!
+        let url = endoint.url
         var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.timeoutInterval = 10
-        request.allHTTPHeaderFields = [
-            "accept": "application/json",
-            "content-type": "application/json",
-            "Authorization": "Bearer \(apiKey)"
-        ]
+        request.httpMethod = endoint.httpMethod
+        request.timeoutInterval = timeoutInterval
+        request.allHTTPHeaderFields = httpHeaderFields
         request.httpBody = postData
         
         let (data, _) = try await URLSession.shared.data(for: request)
@@ -225,35 +232,29 @@ class AuthenticationViewModel {
     
     /// Deletes the current session in TMDB
     /// - Returns: `true` if session is deletes succesfully
-    func deleteIMDBSession() async throws -> Bool {
+    func deleteIMDBSession(endpoint: AuthEndpoint = .deleteSession) async throws -> Bool {
         let parameters = [
             "session_id": self.imdbSession
         ] as [String : Any?]
         do {
             let postData = try JSONSerialization.data(withJSONObject: parameters, options: [])
-            let url = URL(string: "https://api.themoviedb.org/3/authentication/session?api_key=\(apiKey)")!
+            let url = endpoint.url
             var request = URLRequest(url: url)
-            request.httpMethod = "DELETE"
-            request.timeoutInterval = 10
-            request.allHTTPHeaderFields = [
-                "accept": "application/json",
-                "content-type": "application/json",
-                "Authorization": "Bearer \(apiKey)"
-            ]
+            request.httpMethod = endpoint.httpMethod
+            request.timeoutInterval = timeoutInterval
+            request.allHTTPHeaderFields = httpHeaderFields
             request.httpBody = postData
-            
             let (data, _ ) = try await URLSession.shared.data(for: request)
             let decoder = JSONDecoder()
             let deleteSession = try decoder.decode(AuthRequest.self, from: data)
             return deleteSession.success!
-        } catch AuthenticationError.statusCodeFailure {
-            print("DEBUG - Error: status code failed")
+        } catch AuthError.statusCodeFailure {
+            print("DEBUG - Error: \(AuthError.statusCodeFailure.errorMessage)")
         } catch {
             print("DEBUG - Error: \(error.localizedDescription)")
         }
         return false
     }
-    
     
     /// Adds an item to favorites list
     /// - Parameters:
@@ -276,21 +277,54 @@ class AuthenticationViewModel {
             print("DEBUG - Error: \(error.localizedDescription)")
         }
     }
-    
-    
     /// Fetch user's favorite movies
     /// - Parameter page: selected page
-    @MainActor
     func getFavoriteMoviews(page: Int) async throws {
         do {
-            self.account?.favoriteMovies = try await ApiTMDB.shared.getFavoriteMovies(page: 1, accountId: account?.id ?? 0, sessionId: imdbSession)
+            let favoriteMovies = try await ApiTMDB.shared.getFavoriteMovies(page: 1, accountId: account?.id ?? 0, sessionId: imdbSession)
+            self.account?.favoriteMovies = favoriteMovies
         } catch {
             print("Error: \(error.localizedDescription)")
         }
     }
+}
+extension AuthViewModel {
+    enum AuthEndpoint {
+        case requestToken
+        case validateTokenWithLogin
+        case createESession
+        case getAccount(sessionId: String)
+        case deleteSession
+        
+        var url: URL {
+            let baseURL = "https://api.themoviedb.org/3"
+            switch self {
+            case .requestToken:
+                return URL(string: "\(baseURL)/authentication/token/new?api_key=\("4bd71d332c3d3c219fe01c8d465ba03a")")!
+            case .validateTokenWithLogin:
+                return URL(string: "\(baseURL)/authentication/token/validate_with_login?api_key=\("4bd71d332c3d3c219fe01c8d465ba03a")")!
+            case .createESession:
+                return URL(string: "\(baseURL)/authentication/session/new?api_key=\("4bd71d332c3d3c219fe01c8d465ba03a")")!
+            case .getAccount(let sessionId):
+                return URL(string: "\(baseURL)/account?api_key=\("4bd71d332c3d3c219fe01c8d465ba03a")&session_id=\(sessionId)")!
+            case .deleteSession:
+                return URL(string: "\(baseURL)/authentication/session?api_key=\("4bd71d332c3d3c219fe01c8d465ba03a")")!
+            }
+        }
+        
+        var httpMethod: String {
+            switch self {
+            case .getAccount, .requestToken:
+                return "GET"
+            case .validateTokenWithLogin, .createESession:
+                return "POST"
+            case .deleteSession:
+                return "DELETE"
+            }
+        }
+    }
     
 }
-
 
 /// Model for requests response
 struct AuthRequest: Decodable {
@@ -310,7 +344,6 @@ struct AuthRequest: Decodable {
         case statusCode = "status_code"
         case statusMessage = "status_message"
     }
-    
     
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)

@@ -10,12 +10,12 @@ import SwiftUI
 struct MovieView: View {
     
     var movie: Movie?
-    var viewModel: CastViewModel
-    @Environment(AuthenticationViewModel.self) var authViewModel
+    var castViewModel: CastViewModel
+    @Environment(AuthViewModel.self) var authViewModel
     
     init(movie: Movie? = nil) {
         self.movie = movie
-        self.viewModel = CastViewModel(id: self.movie!.id)
+        self.castViewModel = CastViewModel(id: self.movie!.id)
     }
     
     var body: some View {
@@ -33,7 +33,7 @@ struct MovieView: View {
                         MovieActionsBar(idMovie: movie.id)
                             .environment(authViewModel)
                         HStack {
-                            GeneralInfo(cast: viewModel.cast, overview: movie.overview)
+                            GeneralInfo(cast: castViewModel.cast, overview: movie.overview)
                         }
                         MediaTabs()
                     } else {
@@ -52,6 +52,6 @@ struct MovieView: View {
 }
 #Preview(body: {
     MovieView(movie: Movie.preview)
-        .environment(AuthenticationViewModel())
+        .environment(AuthViewModel())
 })
 

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct MainTabView: View {
     @State private var selectedTab: Tab = .home
-    @Environment(AuthenticationViewModel.self) var authViewModel
+    @Environment(AuthViewModel.self) var authViewModel
     @State var viewModel = MoviesViewModel()
     
     var body: some View {
@@ -23,6 +23,7 @@ struct MainTabView: View {
                         .environment(authViewModel)
                 case .favourites:
                     FavouritesView()
+                        .environment(viewModel)
                         .environment(authViewModel)
                 case .profile:
                     ProfileView()
@@ -40,6 +41,6 @@ struct MainTabView: View {
 #Preview {
     NavigationStack {
         MainTabView()
-            .environment(AuthenticationViewModel())
+            .environment(AuthViewModel())
     }
 }

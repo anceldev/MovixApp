@@ -13,7 +13,7 @@ struct SearchMedia: View {
     @State private var searchTerm: String = ""
     @State private var showFilterSheet: Bool = false
     @Bindable var viewModel: MoviesViewModel
-    @Environment(AuthenticationViewModel.self) private var authViewModel
+    @Environment(AuthViewModel.self) private var authViewModel
     
     var body: some View {
         VStack {
@@ -48,5 +48,5 @@ struct SearchMedia: View {
 
 #Preview {
     MainTabView()
-        .environment(AuthenticationViewModel())
+        .environment(AuthViewModel())
 }

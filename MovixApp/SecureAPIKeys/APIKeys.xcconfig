@@ -1,0 +1,11 @@
+//
+//  APIKeys.xcconfig
+//  MovixApp
+//
+//  Created by Ancel Dev account on 22/10/24.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+
+API_KEY = "4bd71d332c3d3c219fe01c8d465ba03a"
