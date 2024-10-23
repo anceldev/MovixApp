@@ -49,7 +49,7 @@ struct PeopleView: View {
                     .padding()
                     
                 }
-                BannerTopBar()
+                BannerTopBar(true)
                     .padding(.top, 44)
             }
             .background(.bw10)

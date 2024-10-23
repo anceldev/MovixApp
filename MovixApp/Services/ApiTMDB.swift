@@ -16,32 +16,11 @@ enum NetworkError: Error {
 
 @Observable
 class ApiTMDB {
-    
     static var shared = ApiTMDB()
-    
-    
+
     private let apiKey = "4bd71d332c3d3c219fe01c8d465ba03a"
     private let baseEndpoint = "https://api.themoviedb.org/3/"
     private var lang: Lang = .en
-    
-    enum Endpoint: String {
-        case movie
-        case tvSerie = "tv"
-        case trending
-        case search
-        case people = "person"
-        case movieGenres = "genre/movie/list?"
-        case tvGenres = "genre/tv/list?"
-    }
-
-    enum Lang: String {
-        case en = "language=en-US"
-        case es = "language=es-ES"
-    }
-    enum TimeWindow: String {
-        case day
-        case week
-    }
     
     private func buildUrl(type search: Endpoint, id: Int) -> URL? {
         let endpoint = baseEndpoint + search.rawValue + "/\(id)?api_key=" + apiKey + "&" + lang.rawValue
@@ -145,7 +124,6 @@ class ApiTMDB {
         let mediaSerch = Endpoint.movie
         do {
             let urlString = baseEndpoint + mediaSerch.rawValue + "/\(id)/credits?api_key=" + apiKey
-            
             guard let url = URL(string: urlString) else { throw NetworkError.invalidUrl }
             let request = URLRequest(url: url)
             let credits = try await fetchData(data: Credits.self, from: request)
@@ -166,10 +144,8 @@ class ApiTMDB {
         let personSearch = Endpoint.people
         do {
             let urlString = baseEndpoint + personSearch.rawValue + "/\(id)?api_key=" + apiKey
-            
             guard let url = URL(string: urlString) else { throw NetworkError.invalidUrl }
             let request = URLRequest(url: url)
-            
             let person = try await fetchData(data: People.self, from: request)
             return person
         } catch NetworkError.invalidUrl {
@@ -245,11 +221,23 @@ class ApiTMDB {
             return -2
         }
     }
+    
+    func getMediaProviders(id: Int) async throws -> Providers? {
+        do {
+            let url = URL(string: "https://api.themoviedb.org/3/movie/\(id)/watch/providers?api_key=\(apiKey)")!
+            let request = URLRequest(url: url)
+            let providers = try await fetchData(data: Providers.self, from: request)
+            return providers
+        } catch {
+            print(error.localizedDescription)
+        }
+        return nil
+    }
+    
     private func fetchData<T: Decodable>(data: T.Type, from request: URLRequest) async throws -> T {
 
         let (data, response) = try await URLSession.shared.data(for: request)
-
-        guard let response = response as? HTTPURLResponse else {
+        guard let _ = response as? HTTPURLResponse else {
             throw NetworkError.invalidResponse
         }
         do {
@@ -264,8 +252,25 @@ class ApiTMDB {
 }
 
 extension ApiTMDB {
+    enum Endpoint: String {
+        case movie
+        case tvSerie = "tv"
+        case trending
+        case search
+        case people = "person"
+        case movieGenres = "genre/movie/list?"
+        case tvGenres = "genre/tv/list?"
+    }
     enum MediaType: String {
         case movie
         case tv
+    }
+    enum Lang: String {
+        case en = "language=en-US"
+        case es = "language=es-ES"
+    }
+    enum TimeWindow: String {
+        case day
+        case week
     }
 }

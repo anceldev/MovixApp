@@ -136,6 +136,7 @@ class AuthViewModel {
         let url = endpoint.url
         do {
             let (data, _) = try await URLSession.shared.data(from: url)
+            print(String(decoding: data, as: UTF8.self))
             let decoder = JSONDecoder()
             let account = try decoder.decode(Account.self, from: data)
             self.account = account

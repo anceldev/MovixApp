@@ -16,6 +16,7 @@ struct PosterView: View {
     let isAdult: Bool?
     let releasedDate: String
     let size: CGSize
+    let id: Int
     
     var body: some View {
         ZStack {
@@ -48,30 +49,17 @@ struct PosterView: View {
             VStack {
                 Spacer()
 
-                Button(action: {
-                    print("Playing moview...")
-                }, label: {
+                NavigationLink {
+                    ProvidersView(id: id)
+                        .navigationBarBackButtonHidden()
+                } label: {
                     Label("Providers", systemImage: "play.display")
                         .font(.system(size: 18))
                         .padding(.horizontal, 16)
-                })
-                .buttonStyle(.capsuleButton(height: 44))
-                .animation(
-                            Animation.easeInOut(duration: 1)
-                                .repeatForever(autoreverses: true),
-                            value: true
-                        )
-                
-                .padding(.top, -12)
-                
-//                NavigationLink {
-//                    VideoPlayerView()
-//                } label: {
-//                    Label("Play", systemImage: "play.fill")
-//                        .font(.system(size: 20))
-//                        .padding(.horizontal, 28)
-//                }
-                
+                        .frame(height: 44)
+                        .background(LinearGradient(colors: [Color.marsA, Color.marsB], startPoint: .bottomLeading, endPoint: .topTrailing))
+                        .clipShape(Capsule())
+                }
                 
                 VStack(spacing: 8) {
                     HStack {
@@ -102,6 +90,8 @@ struct PosterView: View {
 //    PosterView(posterURL: Movie.preview.posterPath, duration: Movie.preview.duration, isAdult: false, releasedDate: Movie.preview.releaseDate?.yearString ?? "1900")
 //}
 #Preview(body: {
-    MovieView(movie: Movie.preview)
-        .environment(AuthViewModel())
+    NavigationStack {
+        MovieView(movie: Movie.preview)
+            .environment(AuthViewModel())
+    }
 })

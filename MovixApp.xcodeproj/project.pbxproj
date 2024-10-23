@@ -15,6 +15,8 @@
 		B4111FAF2C5AFB0B00657258 /* CustomTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4111FAE2C5AFB0B00657258 /* CustomTabBar.swift */; };
 		B4111FB12C5AFF7100657258 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4111FB02C5AFF7100657258 /* HomeView.swift */; };
 		B4111FB32C5B003700657258 /* FavouritesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4111FB22C5B003700657258 /* FavouritesView.swift */; };
+		B421E9232CC8806F002E5D97 /* ProvidersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B421E9222CC8806F002E5D97 /* ProvidersView.swift */; };
+		B421E9252CC88317002E5D97 /* ProvidersViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B421E9242CC88317002E5D97 /* ProvidersViewModel.swift */; };
 		B42BE0BA2C57A15E00EA19D2 /* ApiTMDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42BE0B92C57A15E00EA19D2 /* ApiTMDB.swift */; };
 		B42BE0BD2C57A54A00EA19D2 /* MovieViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42BE0BC2C57A54A00EA19D2 /* MovieViewModel.swift */; };
 		B42BE0BF2C57A59500EA19D2 /* MoviesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42BE0BE2C57A59500EA19D2 /* MoviesViewModel.swift */; };
@@ -73,6 +75,8 @@
 		B4111FAE2C5AFB0B00657258 /* CustomTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBar.swift; sourceTree = "<group>"; };
 		B4111FB02C5AFF7100657258 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		B4111FB22C5B003700657258 /* FavouritesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouritesView.swift; sourceTree = "<group>"; };
+		B421E9222CC8806F002E5D97 /* ProvidersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProvidersView.swift; sourceTree = "<group>"; };
+		B421E9242CC88317002E5D97 /* ProvidersViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProvidersViewModel.swift; sourceTree = "<group>"; };
 		B42BE0B92C57A15E00EA19D2 /* ApiTMDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiTMDB.swift; sourceTree = "<group>"; };
 		B42BE0BC2C57A54A00EA19D2 /* MovieViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieViewModel.swift; sourceTree = "<group>"; };
 		B42BE0BE2C57A59500EA19D2 /* MoviesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesViewModel.swift; sourceTree = "<group>"; };
@@ -123,8 +127,18 @@
 		B4FE2A712C4AF1A3009EF6C5 /* BannerTopBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerTopBar.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		B421E9212CC875E9002E5D97 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				APIKeys.xcconfig,
+			);
+			target = B469DC772C42067A000A5F90 /* MovixApp */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		B4DC758F2CC7141D00633316 /* SecureAPIKeys */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = SecureAPIKeys; sourceTree = "<group>"; };
+		B4DC758F2CC7141D00633316 /* SecureAPIKeys */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (B421E9212CC875E9002E5D97 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = SecureAPIKeys; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -179,6 +193,7 @@
 			children = (
 				B42BE0BC2C57A54A00EA19D2 /* MovieViewModel.swift */,
 				B42BE0BE2C57A59500EA19D2 /* MoviesViewModel.swift */,
+				B421E9242CC88317002E5D97 /* ProvidersViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -373,6 +388,7 @@
 				B4111FB22C5B003700657258 /* FavouritesView.swift */,
 				B4CF4F852C750300003589A7 /* VideoPlayerView.swift */,
 				B4AA93CF2C75D1DC002E258B /* TestingView.swift */,
+				B421E9222CC8806F002E5D97 /* ProvidersView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -411,7 +427,7 @@
 					APIkey,
 				);
 				LastSwiftUpdateCheck = 1520;
-				LastUpgradeCheck = 1520;
+				LastUpgradeCheck = 1600;
 				TargetAttributes = {
 					B469DC772C42067A000A5F90 = {
 						CreatedOnToolsVersion = 15.2;
@@ -504,8 +520,10 @@
 				B4BD2C032C6B5A0300A5518E /* Account.swift in Sources */,
 				B4111FA92C5AF7F600657258 /* MainTabView.swift in Sources */,
 				B42BE0CB2C57E48900EA19D2 /* Credits.swift in Sources */,
+				B421E9252CC88317002E5D97 /* ProvidersViewModel.swift in Sources */,
 				B469DC7C2C42067A000A5F90 /* MovixAppApp.swift in Sources */,
 				B4390BFD2C582B3600AEAB70 /* HexColor.swift in Sources */,
+				B421E9232CC8806F002E5D97 /* ProvidersView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

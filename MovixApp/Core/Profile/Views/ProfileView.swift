@@ -19,9 +19,24 @@ struct ProfileView: View {
                 .fontWeight(.semibold)
             VStack(spacing: 16) {
                 VStack(spacing: 10) {
-                    Image(.profileDefault)
-                        .resizable()
+                    if authViewModel.account?.avatarPath == nil {
+                        Image(.profileDefault)
+                            .resizable()
+                            .frame(width: 104, height: 104)
+                    } else {
+                        AsyncImage(url: URL(string: (authViewModel.account?.avatarPath)!)) { phase in
+                            if let image = phase.image {
+                                image
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                            } else if phase.error != nil {
+                                Text("No image available")
+                            } else {
+                                Image(systemName: "photo")
+                            }
+                        }
                         .frame(width: 104, height: 104)
+                    }
                     Text(authViewModel.account?.name ?? "No name")
                         .font(.system(size: 20))
                         .foregroundStyle(.white)

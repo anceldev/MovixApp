@@ -28,7 +28,8 @@ struct MovieView: View {
                             duration: movie.duration,
                             isAdult: movie.isAdult,
                             releasedDate: movie.releaseDate?.yearString ?? "NP",
-                            size: geo.size
+                            size: geo.size,
+                            id: movie.id
                         )
                         MovieActionsBar(idMovie: movie.id)
                             .environment(authViewModel)
@@ -43,7 +44,7 @@ struct MovieView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background(.bw10)
                 .background(ignoresSafeAreaEdges: .bottom)
-                BannerTopBar()
+                BannerTopBar(true, true)
                     .padding(.top, 44)
             }
         }
@@ -51,7 +52,9 @@ struct MovieView: View {
     }
 }
 #Preview(body: {
-    MovieView(movie: Movie.preview)
-        .environment(AuthViewModel())
+    NavigationStack {
+        MovieView(movie: Movie.preview)
+            .environment(AuthViewModel())
+    }
 })
 
