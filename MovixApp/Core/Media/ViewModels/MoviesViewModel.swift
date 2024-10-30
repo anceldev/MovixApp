@@ -19,6 +19,8 @@ final class MoviesViewModel {
     
     var movieGenres: [Genre] = []
     
+//    private let session = URLSession(configuration: .default)
+    
     init() {
         getTrendingMovies(page: 1)
 //        getMovieGenres()
@@ -66,4 +68,11 @@ final class MoviesViewModel {
             }
         }
     }
+    
+//    func donwloadImage(for movie: Movie) async throws {
+//        guard let index = self.movies.firstIndex(where: { $0.id == movie.id } ), self.movies[index].posterDataPath == nil else { return }
+//        let (data,_) = try await session.data(from: movie.posterPath!)
+//        let dataURL = URL(string: "data:image/jpg;base64," + data.base64EncodedString())
+//        self.movies[index].posterDataPath = dataURL
+//    }
 }

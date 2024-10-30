@@ -7,11 +7,18 @@
 
 import SwiftUI
 
+enum ItemsViewOption {
+    case row
+    case grid
+}
 
-struct SearchMedia: View {
+struct SearchView: View {
+
     
     @State private var searchTerm: String = ""
     @State private var showFilterSheet: Bool = false
+    @State private var itemsView: ItemsViewOption = .row
+    
     @Bindable var viewModel: MoviesViewModel
     @Environment(AuthViewModel.self) private var authViewModel
     
@@ -25,9 +32,10 @@ struct SearchMedia: View {
                 searchTerm: $searchTerm,
                 filterAction: {
                     showFilterSheet = true
-                }
+                },
+                itemsView: $itemsView
             )
-            MediaList(movies: viewModel.movies, fetchAction: searchTerm == "" ? .trending : .search)
+            ItemsView(movies: viewModel.movies, fetchAction: searchTerm == "" ? .trending : .search, itemsView: itemsView)
                 .environment(authViewModel)
                 .environment(viewModel)
         }

@@ -16,6 +16,9 @@ struct Movie: Decodable, Identifiable, Hashable {
     var runtime: Int?
     var releaseDate: Date?
     var posterPath: URL?
+    
+    var posterDataPath: URL?
+    
     var backdropPath: URL?
     var budget: Double?
     var homepageURL: URL?

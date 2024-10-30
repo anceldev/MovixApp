@@ -12,6 +12,8 @@ struct MainTabView: View {
     @Environment(AuthViewModel.self) var authViewModel
     @State var viewModel = MoviesViewModel()
     
+    @ObserveInjection var inject
+    
     var body: some View {
         VStack {
             VStack(spacing: 0) {
@@ -19,7 +21,7 @@ struct MainTabView: View {
                 case .home:
                     HomeView()
                 case .search:
-                    SearchMedia(viewModel: viewModel)
+                    SearchView(viewModel: viewModel)
                         .environment(authViewModel)
                 case .favourites:
                     FavouritesView()
@@ -35,6 +37,7 @@ struct MainTabView: View {
         }
         .background(.bw10)
         .background(ignoresSafeAreaEdges: .bottom)
+        .enableInjection()
     }
 }
 

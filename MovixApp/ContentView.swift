@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct ContentView: View {
-   @State var authVM = AuthViewModel()
+    @State var authVM = AuthViewModel()
+    @ObserveInjection var inject
     var body: some View {
         VStack {
             switch authVM.flow {
@@ -21,6 +22,7 @@ struct ContentView: View {
                 LoginView(viewModel: authVM)
             }
         }
+        .enableInjection()
     }
 }
 

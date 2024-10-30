@@ -10,6 +10,7 @@ import SwiftUI
 struct ProfileView: View {
     
     @Environment(AuthViewModel.self) var authViewModel
+    @ObserveInjection var inject
     
     var body: some View {
         VStack {
@@ -62,6 +63,7 @@ struct ProfileView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(.bw10)
+        .enableInjection()
     }
     private func logout() {
         Task {

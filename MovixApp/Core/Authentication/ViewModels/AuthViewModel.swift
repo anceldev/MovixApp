@@ -55,15 +55,18 @@ class AuthViewModel {
     var passwordTMDB: String = ""
     
     private var imdbSession: String = ""
-    private var httpHeaderFields: [String : String] = [
-        "Accept" : "applicaiton/json",
-        "content-type": "application/json",
-        "Authorization": "Bearer \("API_KEY")"
-    ]
-    private var shortHttpHeaderFields: [String : String] = [
-        "Accept" : "applicaiton/json",
-        "Authorization": "Bearer \("API_KEY")"
-    ]
+    
+    private var httpHeaderFields: [String: String] {
+        var headers = [
+            "accepts": "application/json",
+            "Authorization": "Bearer 4bd71d332c3d3c219fe01c8d465ba03a"
+        ]
+        if needsContentType {
+            headers["content-type"] = "application/json"
+        }
+        return headers
+    }
+    private var needsContentType: Bool = false
      
     private var timeoutInterval: Double = 10
     
@@ -79,12 +82,21 @@ class AuthViewModel {
                     try await getAccount(endpoint: .getAccount(sessionId: self.imdbSession))
 //                    try await getFavoriteMoviews(page: 1)
                 } catch {
+                    print(error)
                     throw AuthError.imdbAuthentication
                 }
             }
         } else {
             print("No session in userdefaults")
         }
+    }
+    private func resetValues() {
+        self.imdbSession = ""
+        self.account = nil
+        self.flow = .unauthenticated
+        self.usernameTMDB = ""
+        self.passwordTMDB = ""
+        UserDefaults.standard.removeObject(forKey: "session_id")
     }
     
     /// Login account
@@ -107,6 +119,7 @@ class AuthViewModel {
                 try await getAccount(endpoint: .getAccount(sessionId: imdbSession))
 //                try await getFavoriteMoviews(page: 1)
             } catch {
+                print(error)
                 throw AuthError.imdbAuthentication
             }
         }
@@ -117,12 +130,7 @@ class AuthViewModel {
     @MainActor
     func logoutTMDB() async throws {
         do {
-            if try await deleteIMDBSession() {
-                self.imdbSession = ""
-                self.account = nil
-                self.flow = .unauthenticated
-                UserDefaults.standard.removeObject(forKey: "session_id")
-            }
+            if try await deleteIMDBSession() { return }
         } catch {
             print("DEBUG - Error: \(error.localizedDescription)")
         }
@@ -131,18 +139,15 @@ class AuthViewModel {
     /// Get the user account info using the session token
     @MainActor
     private func getAccount(endpoint: AuthEndpoint) async throws {
-//        let urlString = "https://api.themoviedb.org/3/account?api_key=\(apiKey)&session_id=" + self.imdbSession
-//        let url = URL(string: urlString)!
         let url = endpoint.url
         do {
             let (data, _) = try await URLSession.shared.data(from: url)
-            print(String(decoding: data, as: UTF8.self))
             let decoder = JSONDecoder()
             let account = try decoder.decode(Account.self, from: data)
             self.account = account
             self.flow = .authenticated
         } catch {
-            print("DEBUG - Error: Fail getting account")
+            print(error)
             print(error.localizedDescription)
         }
     }
@@ -154,7 +159,8 @@ class AuthViewModel {
         var request = URLRequest(url: url)
         request.httpMethod = endpoint.httpMethod
         request.timeoutInterval = timeoutInterval
-        request.allHTTPHeaderFields = shortHttpHeaderFields
+        self.needsContentType = false
+        request.allHTTPHeaderFields = httpHeaderFields
         do {
             let (data, _) = try await URLSession.shared.data(for: request)
             let decoder = JSONDecoder()
@@ -184,6 +190,7 @@ class AuthViewModel {
             var request = URLRequest(url: url)
             request.httpMethod = endpoint.httpMethod
             request.timeoutInterval = timeoutInterval
+            self.needsContentType = true
             request.allHTTPHeaderFields = httpHeaderFields
             request.httpBody = postData
             let (data, _) = try await URLSession.shared.data(for: request)
@@ -219,6 +226,7 @@ class AuthViewModel {
         var request = URLRequest(url: url)
         request.httpMethod = endoint.httpMethod
         request.timeoutInterval = timeoutInterval
+        self.needsContentType = true
         request.allHTTPHeaderFields = httpHeaderFields
         request.httpBody = postData
         
@@ -234,27 +242,35 @@ class AuthViewModel {
     /// Deletes the current session in TMDB
     /// - Returns: `true` if session is deletes succesfully
     func deleteIMDBSession(endpoint: AuthEndpoint = .deleteSession) async throws -> Bool {
-        let parameters = [
-            "session_id": self.imdbSession
-        ] as [String : Any?]
         do {
+            let parameters = [
+                "session_id": self.imdbSession
+            ] as [String : Any?]
             let postData = try JSONSerialization.data(withJSONObject: parameters, options: [])
             let url = endpoint.url
             var request = URLRequest(url: url)
             request.httpMethod = endpoint.httpMethod
             request.timeoutInterval = timeoutInterval
+            self.needsContentType = true
             request.allHTTPHeaderFields = httpHeaderFields
             request.httpBody = postData
             let (data, _ ) = try await URLSession.shared.data(for: request)
             let decoder = JSONDecoder()
             let deleteSession = try decoder.decode(AuthRequest.self, from: data)
-            return deleteSession.success!
+            if let success = deleteSession.success, success == true {
+                resetValues()
+            } else {
+                throw AuthError.statusCodeFailure
+            }
+            return true
+            
         } catch AuthError.statusCodeFailure {
             print("DEBUG - Error: \(AuthError.statusCodeFailure.errorMessage)")
+            return false
         } catch {
             print("DEBUG - Error: \(error.localizedDescription)")
+            return false
         }
-        return false
     }
     
     /// Adds an item to favorites list
@@ -309,18 +325,15 @@ extension AuthViewModel {
             case .getAccount(let sessionId):
                 return URL(string: "\(baseURL)/account?api_key=\("4bd71d332c3d3c219fe01c8d465ba03a")&session_id=\(sessionId)")!
             case .deleteSession:
-                return URL(string: "\(baseURL)/authentication/session?api_key=\("4bd71d332c3d3c219fe01c8d465ba03a")")!
+                return URL(string: "\(baseURL)/authentication/session?api_key=4bd71d332c3d3c219fe01c8d465ba03a")!
             }
         }
         
         var httpMethod: String {
             switch self {
-            case .getAccount, .requestToken:
-                return "GET"
-            case .validateTokenWithLogin, .createESession:
-                return "POST"
-            case .deleteSession:
-                return "DELETE"
+            case .getAccount, .requestToken: "GET"
+            case .validateTokenWithLogin, .createESession: "POST"
+            case .deleteSession: "DELETE"
             }
         }
     }

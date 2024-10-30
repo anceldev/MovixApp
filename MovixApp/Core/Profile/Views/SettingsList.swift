@@ -54,15 +54,15 @@ struct SettingsList: View {
                             Image(systemName: "chevron.right")
                         }
                     }
-                    NavigationLink {
-                        Text("History")
-                    } label: {
-                        HStack {
-                            Label("History", systemImage: "clock.arrow.circlepath")
-                            Spacer(minLength: 0)
-                            Image(systemName: "chevron.right")
-                        }
-                    }
+//                    NavigationLink {
+//                        Text("History")
+//                    } label: {
+//                        HStack {
+//                            Label("History", systemImage: "clock.arrow.circlepath")
+//                            Spacer(minLength: 0)
+//                            Image(systemName: "chevron.right")
+//                        }
+//                    }
                 }
                 .padding(16)
                 .background(Color.bw20)

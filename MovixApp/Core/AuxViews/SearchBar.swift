@@ -10,6 +10,8 @@ import SwiftUI
 struct SearchBar: View {
     @Binding var searchTerm: String
     var filterAction: () -> Void
+    @Binding var itemsView: ItemsViewOption
+    
     var body: some View {
         HStack(spacing: 16) {
             HStack {
@@ -19,6 +21,7 @@ struct SearchBar: View {
                     .padding(.trailing, 4)
                 TextField("Search...", text: $searchTerm, prompt: Text("Search...").foregroundStyle(.bw50))
                     .tint(.bw90)
+                
                 Button(action: {
                     searchTerm = ""
                 }, label: {
@@ -33,15 +36,24 @@ struct SearchBar: View {
             .background(.bw40)
             .clipShape(RoundedRectangle(cornerRadius: 12))
             .padding(.leading, 16)
-//            .padding(.horizontal)
-            
-            Button(action: {
-                filterAction()
-            }, label: {
-                Label("Filter", systemImage: "line.3.horizontal.decrease")
-                    .labelStyle(.iconOnly)
-                    .foregroundStyle(.white)
-            })
+            //            .padding(.horizontal)
+            HStack(spacing: 8) {
+                Button(action: {
+                    filterAction()
+                }, label: {
+                    Label("Filter", systemImage: "line.3.horizontal.decrease")
+                        .labelStyle(.iconOnly)
+                        .foregroundStyle(.white)
+                })
+                Button(action: {
+                    withAnimation(.easeInOut) {
+                        itemsView = itemsView == .row ? .grid : .row
+                    }
+                }, label: {
+                    Image(systemName: itemsView == .row ? "rectangle.grid.3x2" : "rectangle.grid.1x2")
+                        .foregroundStyle(.white)
+                })
+            }
             .frame(height: 42)
             .padding(.trailing, 16)
         }
@@ -49,8 +61,8 @@ struct SearchBar: View {
         .frame(height: 44)
     }
 }
-  
+
 #Preview(traits: .sizeThatFitsLayout, body: {
-    SearchBar(searchTerm: .constant(""), filterAction: {})
+    SearchBar(searchTerm: .constant(""), filterAction: {}, itemsView: .constant(.row))
         .background(.bw20)
 })
