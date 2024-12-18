@@ -11,7 +11,10 @@ struct MovieView: View {
     
     var movie: Movie?
     var castViewModel: CastViewModel
+    @State private var showRateSlider = true
+    @State private var currentRate: Float = 5.0
     @Environment(AuthViewModel.self) var authViewModel
+    
     
     init(movie: Movie? = nil) {
         self.movie = movie
@@ -31,7 +34,7 @@ struct MovieView: View {
                             size: geo.size,
                             id: movie.id
                         )
-                        MovieActionsBar(idMovie: movie.id)
+                        MovieActionsBar(idMovie: movie.id, showRateSlider: $showRateSlider)
                             .environment(authViewModel)
                         HStack {
                             GeneralInfo(cast: castViewModel.cast, overview: movie.overview)
@@ -47,8 +50,17 @@ struct MovieView: View {
                 BannerTopBar(true, true)
                     .padding(.top, 44)
             }
+            .sheet(isPresented: $showRateSlider) {
+                RateView(currentRate: $currentRate, action: makeRate)
+                    .presentationDetents([.height(300)])
+//                    .presentationBackground(.red)
+            }
         }
         .ignoresSafeArea()
+    }
+    private func makeRate() {
+        let rateValue = round(currentRate * 10) / 10
+        
     }
 }
 #Preview(body: {

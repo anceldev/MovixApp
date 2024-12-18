@@ -47,7 +47,7 @@ enum AuthenticationFlow {
 class AuthViewModel {
     
     var account: Account?
-    var flow: AuthenticationFlow = .unauthenticated
+    var flow: AuthenticationFlow = .authenticating
 
 //    let apiKey: String = "4bd71d332c3d3c219fe01c8d465ba03a"
     
@@ -74,21 +74,30 @@ class AuthViewModel {
     /// Fetchs account data with that session.
     @MainActor
     init(){
-        let currentSessionId = UserDefaults.standard.string(forKey: "session_id")
-        if currentSessionId != nil {
-            self.imdbSession = currentSessionId!
-            Task {
-                do {
-                    try await getAccount(endpoint: .getAccount(sessionId: self.imdbSession))
-//                    try await getFavoriteMoviews(page: 1)
-                } catch {
-                    print(error)
-                    throw AuthError.imdbAuthentication
-                }
-            }
-        } else {
-            print("No session in userdefaults")
+        guard let currentSessionId = UserDefaults.standard.string(forKey: "session_id") else {
+            print("No session in user defaults")
+            self.flow = .unauthenticated
+            return
         }
+//        let currentSessionId = UserDefaults.standard.string(forKey: "session_id")
+//        if currentSessionId != nil {
+        
+//            self.imdbSession = currentSessionId!
+        Task {
+            do {
+                self.imdbSession = currentSessionId
+                try await getAccount(endpoint: .getAccount(sessionId: self.imdbSession))
+                self.flow = .authenticated
+                //                    try await getFavoriteMoviews(page: 1)
+            } catch {
+                print(error.localizedDescription)
+                self.flow = .unauthenticated
+                throw AuthError.imdbAuthentication
+            }
+        }
+//        } else {
+//            print("No session in userdefaults")
+//        }
     }
     private func resetValues() {
         self.imdbSession = ""
@@ -118,8 +127,10 @@ class AuthViewModel {
                 UserDefaults.standard.setValue(sessionId, forKey: "session_id")
                 try await getAccount(endpoint: .getAccount(sessionId: imdbSession))
 //                try await getFavoriteMoviews(page: 1)
+                self.flow = .authenticated
             } catch {
-                print(error)
+                print(error.localizedDescription)
+                self.flow = .unauthenticated
                 throw AuthError.imdbAuthentication
             }
         }
@@ -145,10 +156,9 @@ class AuthViewModel {
             let decoder = JSONDecoder()
             let account = try decoder.decode(Account.self, from: data)
             self.account = account
-            self.flow = .authenticated
         } catch {
-            print(error)
             print(error.localizedDescription)
+            throw error
         }
     }
     
@@ -338,41 +348,4 @@ extension AuthViewModel {
         }
     }
     
-}
-
-/// Model for requests response
-struct AuthRequest: Decodable {
-    let success: Bool?
-    let expiresAt: Date?
-    let token: String?
-    let sessionId: String?
-    
-    let statusCode: Int?
-    let statusMessage: String?
-    
-    enum CodingKeys: String, CodingKey {
-        case success
-        case expiresAt = "expires_at"
-        case requestToken = "request_token"
-        case sessionId = "session_id"
-        case statusCode = "status_code"
-        case statusMessage = "status_message"
-    }
-    
-    init(from decoder: Decoder) throws {
-        let values = try decoder.container(keyedBy: CodingKeys.self)
-        
-        self.success = try values.decode(Bool.self, forKey: .success)
-        if let expiresDate = try values.decodeIfPresent(String.self, forKey: .expiresAt) {
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "yyyy-MM-dd"
-            self.expiresAt = dateFormatter.date(from: expiresDate)
-        } else {
-            self.expiresAt = nil
-        }
-        self.token = try values.decodeIfPresent(String.self, forKey: .requestToken)
-        self.sessionId = try values.decodeIfPresent(String.self, forKey: .sessionId)
-        self.statusCode = try values.decodeIfPresent(Int.self, forKey: .statusCode)
-        self.statusMessage = try values.decodeIfPresent(String.self, forKey: .statusMessage)
-    }
 }

@@ -8,8 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State var authVM = AuthViewModel()
-    @ObserveInjection var inject
+    @Environment(AuthViewModel.self) var authVM
     var body: some View {
         VStack {
             switch authVM.flow {
@@ -19,15 +18,15 @@ struct ContentView: View {
             case .authenticating:
                 ProgressView()
             case .unauthenticated:
-                LoginView(viewModel: authVM)
+                LoginView()
             }
         }
-        .enableInjection()
     }
 }
 
 #Preview {
     NavigationStack {
         ContentView()
+            .environment(AuthViewModel())
     }
 }

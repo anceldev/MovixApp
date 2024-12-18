@@ -24,10 +24,10 @@ struct Providers: Decodable {
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let resultsContainer = try container.nestedContainer(keyedBy: CountryCodes.self, forKey: .results)
-        let esContainer = try resultsContainer.nestedContainer(keyedBy: ProviderTypes.self, forKey: .ES)
-        self.rentProviders = try esContainer.decodeIfPresent([Provider].self, forKey: .rent) ?? []
-        self.buyProviders = try esContainer.decodeIfPresent([Provider].self, forKey: .buy) ?? []
-        self.streamProviders = try esContainer.decodeIfPresent([Provider].self, forKey: .flatrate) ?? []
+        let esContainer = try? resultsContainer.nestedContainer(keyedBy: ProviderTypes.self, forKey: .ES)
+        self.rentProviders = try esContainer?.decodeIfPresent([Provider].self, forKey: .rent) ?? []
+        self.buyProviders = try esContainer?.decodeIfPresent([Provider].self, forKey: .buy) ?? []
+        self.streamProviders = try esContainer?.decodeIfPresent([Provider].self, forKey: .flatrate) ?? []
     }
     init() {
         self.rentProviders = []

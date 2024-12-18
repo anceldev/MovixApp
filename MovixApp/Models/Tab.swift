@@ -17,7 +17,7 @@ enum Tab {
     var selected: String {
         switch self {
         case .home: return "house.fill"
-        case .search: return "magnifyingglass.circle.fill"
+        case .search: return "magnifyingglass"
         case .favourites: return "heart.fill"
         case .profile: return "person.fill"
         }

@@ -11,12 +11,11 @@ struct LoginView: View {
     private enum FocusedField {
         case username, password
     }
-    
-    @Bindable var viewModel: AuthViewModel
-//    @ObservedObject var viewModel: AuthenticationViewModel
+    @Environment(AuthViewModel.self) var authVM
     @FocusState private var focusedField: FocusedField?
     
     var body: some View {
+        @Bindable var viewModel = authVM
         VStack {
             VStack(spacing: 28) {
                 Title()
@@ -30,6 +29,7 @@ struct LoginView: View {
                         .foregroundStyle(viewModel.usernameTMDB != "" ? .white : .bw50)
                         .focused($focusedField, equals: .username).animation(.easeInOut, value: focusedField)
                         .tint(.white)
+                        .submitLabel(.next)
                         .onSubmit {
                             focusedField = .password
                         }
@@ -40,6 +40,7 @@ struct LoginView: View {
                         .textInputAutocapitalization(.never)
                         .focused($focusedField, equals: .password).animation(.easeInOut, value: focusedField)
                         .tint(.white)
+                        .submitLabel(.go)
                         .onSubmit {
                             login()
                         }
@@ -88,9 +89,10 @@ struct LoginView: View {
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(height: 80)
-                    Text("Add your\navatar photo")
-                        .multilineTextAlignment(.center)
+//                    Text("Add your\navatar")
+//                        .multilineTextAlignment(.center)
                 }
+                .padding(.bottom, 24)
             }
             .foregroundStyle(.white)
         }
@@ -99,7 +101,7 @@ struct LoginView: View {
     private func login() {
         Task {
             do {
-                try await viewModel.loginTMDB()
+                try await authVM.loginTMDB()
             } catch {
                 print("DEBUG - Error: Error in LoginView")
             }
@@ -113,6 +115,7 @@ struct LoginView: View {
     preview.account?.name = "Name"
     preview.account?.username = "Username"
     return NavigationStack {
-        LoginView(viewModel: preview)
+        LoginView()
+            .environment(preview)
     }
 })

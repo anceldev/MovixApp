@@ -45,6 +45,28 @@ class ApiTMDB {
         }
         return nil
     }
+    
+    func rateMovie(rate: Double, sessionId: String) async throws {
+        let postData = Data("{\"value\":\(rate)".utf8)
+        let url = URL(string: "https://api.themoviedb.org/3/movie/movie_id/rating?session_id=\(sessionId)")!
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.timeoutInterval = 10
+        request.allHTTPHeaderFields = [
+          "accept": "application/json",
+          "Content-Type": "application/json;charset=utf-8",
+          "Authorization": "Bearer \(apiKey)"
+        ]
+        request.httpBody = postData
+        do {
+            let (data, _) = try await URLSession.shared.data(for: request)
+            print(String(decoding: data, as: UTF8.self))
+        } catch {
+            print(error.localizedDescription)
+            print("No rated movie")
+        }
+
+    }
 
     @MainActor
     func getTrendingMovies(page: Int) async -> [Movie] {

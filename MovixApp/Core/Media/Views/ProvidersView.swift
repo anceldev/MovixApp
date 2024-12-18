@@ -17,18 +17,15 @@ struct ProvidersView: View {
         ZStack(alignment: .top) {
             BannerTopBar(true)
             VStack {
-                if viewModel.providers.streamProviders.count > 0 {
-                    ProvidersList(title: "Stream", providers: viewModel.providers.streamProviders)
-                }
-                if viewModel.providers.rentProviders.count > 0 {
-                    ProvidersList(title: "Rent", providers: viewModel.providers.rentProviders)
-                }
-                if viewModel.providers.buyProviders.count > 0 {
-                    ProvidersList(title: "Buy", providers: viewModel.providers.buyProviders)
-                }
+                ProvidersList(title: "Stream", providers: viewModel.providers.streamProviders)
+                    .background(.clear)
+                ProvidersList(title: "Rent", providers: viewModel.providers.rentProviders)
+                    .background(.clear)
+                ProvidersList(title: "Buy", providers: viewModel.providers.buyProviders)
+                    .background(.clear)
                 Spacer()
             }
-            .padding()
+            .padding(24)
             .padding(.top, 40)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
@@ -40,34 +37,36 @@ struct ProvidersView: View {
             Text(title)
                 .font(.system(size: 20, weight: .medium))
                 .foregroundStyle(.bw50)
-            ScrollView(.horizontal) {
-                VStack(alignment: .leading) {
-                    HStack {
-                        ForEach(providers) { provider in
-                            AsyncImage(url: provider.logoPath) { phase in
-                                switch phase {
-                                case .empty:
-                                    Color.gray
-                                case .success(let image):
-                                    image
-                                        .resizable()
-                                        .scaledToFill()
-                                        .frame(width: 80, height: 80, alignment: .top)
-                                case .failure:
-                                    Image(systemName: "photo")
-                                        .font(.largeTitle)
-                                @unknown default:
-                                    ProgressView()
-                                }
+            if providers.count > 0 {
+                FlowLayout(spacing: 24) {
+                    ForEach(providers) { provider in
+                        AsyncImage(url: provider.logoPath) { phase in
+                            switch phase {
+                            case .empty:
+                                Color.gray
+                            case .success(let image):
+                                image
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(width: 75, height: 75, alignment: .top)
+                            case .failure:
+                                Image(systemName: "photo")
+                                    .font(.largeTitle)
+                            @unknown default:
+                                ProgressView()
                             }
-                            .clipShape(RoundedRectangle(cornerRadius: 15))
-                            .padding(.horizontal, 5)
                         }
+                        .clipShape(RoundedRectangle(cornerRadius: 15))
                     }
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .scrollIndicators(.hidden)
+            } else {
+                Text("No available \(title.lowercased()) providers in your region")
+                    .foregroundStyle(.white)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.vertical, 16)
             }
-            .frame(maxWidth: .infinity)
-            .scrollIndicators(.hidden)
         }
     }
 }

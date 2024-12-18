@@ -11,12 +11,14 @@ import SwiftUI
 
 @main
 struct MovixAppApp: App {
+    @State private var authVM = AuthViewModel()
     var body: some Scene {
         WindowGroup {
             NavigationStack {
                 ContentView()
-                    .environment(\.colorScheme, .dark)
+                    .environment(authVM)
             }
         }
+        .environment(\.colorScheme, .dark)
     }
 }
