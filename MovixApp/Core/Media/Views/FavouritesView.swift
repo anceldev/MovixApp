@@ -11,6 +11,7 @@ struct FavouritesView: View {
     @Environment(AuthViewModel.self) var authViewModel
     @Environment(MoviesViewModel.self) var moviesViewModel
     @State private var showFilterSheet = false
+    @State private var searchTerm = ""
     var body: some View {
         VStack {
             Text("Favorites")
@@ -18,7 +19,7 @@ struct FavouritesView: View {
                 .foregroundStyle(.white)
                 .fontWeight(.semibold)
             if let favorites = authViewModel.account?.favoriteMovies {
-                ItemsView(movies: favorites, fetchAction: .favMovies, itemsView: .row)
+                ItemsView(searchTerm: $searchTerm, itemsView: .row)
                     .environment(moviesViewModel)
             } else {
                 Text("No favorite movies added")

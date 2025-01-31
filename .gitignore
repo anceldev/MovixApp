@@ -91,3 +91,5 @@ iOSInjectionProject/
 
 .DS_Store
 Config.xcconfig
+.vscode/
+buildServer.json

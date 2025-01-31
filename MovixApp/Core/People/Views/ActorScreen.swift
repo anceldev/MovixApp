@@ -1,5 +1,5 @@
 //
-//  PeopleView.swift
+//  ActorScreen.swift
 //  MovixApp
 //
 //  Created by Ancel Dev account on 30/7/24.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct PeopleView: View {
+struct ActorScreen: View {
     let id: Int
     let viewModel: PeopleViewModel
     @State private var viewMoreLimit: Int? = 5
@@ -18,12 +18,10 @@ struct PeopleView: View {
     }
     
     var body: some View {
-        GeometryReader { geo in
-            let size = geo.size
             ZStack(alignment: .top) {
                 ScrollView(.vertical) {
                     ZStack {
-                        ActorPhoto(size: size)
+                        ActorPhoto()
                         LinearGradient(
                             stops: [
                                 .init(color: .bw10.opacity(0.59), location: 0),
@@ -54,21 +52,23 @@ struct PeopleView: View {
             }
             .background(.bw10)
             .ignoresSafeArea()
-        }
-        .ignoresSafeArea(.all)
     }
     @ViewBuilder
-    func ActorPhoto(size: CGSize) -> some View {
-        VStack {
+    func ActorPhoto() -> some View {
+        ZStack {
+            Color.gray
+                .aspectRatio(27/40, contentMode: .fill)
             AsyncImage(url: viewModel.actor?.profilePath) { phase in
                 switch phase {
                 case .empty:
-                    Color.gray
+                    ProgressView()
+                        .tint(.marsB)
                 case .success(let image):
-                    image
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: size.width, height: size.height * 0.65, alignment: .top)
+                    withAnimation(.easeIn) {
+                        image
+                            .resizable()
+                            .aspectRatio(27/40, contentMode: .fill)
+                    }
                 case .failure(let error):
                     VStack {
                         Image(systemName: "photo")
@@ -80,6 +80,7 @@ struct PeopleView: View {
             }
         }
         .clipped()
+        .frame(maxWidth: .infinity)
     }
     @ViewBuilder
     func ActorData() -> some View {
@@ -125,5 +126,5 @@ struct PeopleView: View {
 }
 
 #Preview(traits: .sizeThatFitsLayout, body: {
-    PeopleView(id: 10859)
+    ActorScreen(id: 10859)
 })

@@ -6,17 +6,14 @@
 //
 
 import SwiftUI
-import Inject
 
 struct HomeView: View {
-    @ObserveInjection var inject
     var body: some View {
         VStack(alignment: .center) {
             Spacer()
             Text("Hello Movix App!")
             Spacer()
         }
-        .enableInjection()
     }
 }
 

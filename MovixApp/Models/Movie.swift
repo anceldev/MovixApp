@@ -6,7 +6,38 @@
 ////
 
 import Foundation
+import SwiftUI
 
+struct ImageLoader {
+    static func loadImage(from urlString: String) async -> Image? {
+        guard let url = URL(string: urlString) else { return nil }
+        
+        do {
+            let (data, _) = try await URLSession.shared.data(from: url)
+            guard let uiImage = UIImage(data: data) else { return nil }
+            return Image(uiImage: uiImage)
+        } catch {
+            print("Image loading error: \(error.localizedDescription)")
+            return nil
+        }
+    }
+}
+
+fileprivate enum BackdropSizes: String, CaseIterable {
+    case w300
+    case w780
+    case w1280
+    case original
+}
+fileprivate enum PosterSizes: String, CaseIterable {
+    case w92
+    case w154
+    case w185
+    case w342
+    case w500
+    case w780
+    case original
+}
 
 struct Movie: Decodable, Identifiable, Hashable {
     var id: Int
@@ -15,9 +46,13 @@ struct Movie: Decodable, Identifiable, Hashable {
     var overview: String?
     var runtime: Int?
     var releaseDate: Date?
-    var posterPath: URL?
+    var posterPathUrl: URL?
+    var posterPath: String?
     
-    var posterDataPath: URL?
+    var posterData: Data?
+    var backdropData: Data?
+    
+//    var posterDataPath: URL?
     
     var backdropPath: URL?
     var budget: Double?
@@ -26,7 +61,6 @@ struct Movie: Decodable, Identifiable, Hashable {
     var voteAverage: Double?
     var voteCount: Int?
     var isAdult: Bool?
-
     
     var duration: String {
         guard let runtime else {
@@ -56,7 +90,7 @@ struct Movie: Decodable, Identifiable, Hashable {
         self.overview = overview
         self.runtime = runtime
         self.releaseDate = releaseDate
-        self.posterPath = posterPath
+        self.posterPathUrl = posterPath
         self.backdropPath = backdropPath
         self.budget = budget
         self.homepageURL = homepageURL
@@ -64,6 +98,38 @@ struct Movie: Decodable, Identifiable, Hashable {
         self.voteAverage = voteAverage
         self.voteCount = voteCount
         self.isAdult = isAdult
+    }
+    
+    static func getBackdropImage(posterPath: String?) async -> Image? {
+        guard let posterPath = posterPath else {
+            return nil
+        }
+        var url = URL(string: "https://image.tmdb.org/t/p/w780\(posterPath)")!
+        do {
+            let (dataW500, _) = try await URLSession.shared.data(from: url)
+            if let uiImage = UIImage(data: dataW500) {
+                return Image(uiImage: uiImage)
+            }
+            url = URL(string: "https://image.tmdb.org/t/p/w1280\(posterPath)")!
+            let (dataW1280, _) = try await URLSession.shared.data(from: url)
+            if let uiImage = UIImage(data: dataW1280) {
+                return Image(uiImage: uiImage)
+            }
+            url = URL(string: "https://image.tmdb.org/t/p/original\(posterPath)")!
+            let (dataOriginal, _) = try await URLSession.shared.data(from: url)
+            if let uiImage = UIImage(data: dataOriginal) {
+                return Image(uiImage: uiImage)
+            }
+            url = URL(string: "https://image.tmdb.org/t/p/w300\(posterPath)")!
+            let (dataW300, _) = try await URLSession.shared.data(from: url)
+            if let uiImage = UIImage(data: dataW300) {
+                return Image(uiImage: uiImage)
+            }
+            return nil
+        } catch {
+            print(error.localizedDescription)
+            return nil
+        }
     }
 }
 
@@ -104,10 +170,11 @@ extension Movie {
         }
 
         let posterPath = try container.decodeIfPresent(String.self, forKey: .posterPath)
-        self.posterPath = URL(string: "https://image.tmdb.org/t/p/w500\(posterPath ?? "")")
+        self.posterPath = posterPath
+        self.posterPathUrl = URL(string: "https://image.tmdb.org/t/p/w500\(posterPath ?? "")")
         
         let backdropPath = try container.decodeIfPresent(String.self, forKey: .backdropPath)
-        self.backdropPath = URL(string: "https://image.tmdb.org/t/p/w500\(backdropPath ?? "")")
+        self.backdropPath = URL(string: "https://image.tmdb.org/t/p/w780\(backdropPath ?? "")")
         
         self.budget = try container.decodeIfPresent(Double.self, forKey: .budget)
         self.homepageURL = try container.decodeIfPresent(URL.self, forKey: .homepageURL)

@@ -8,9 +8,10 @@
 import SwiftUI
 
 struct MainTabView: View {
-    @State private var selectedTab: Tab = .home
+    @State private var selectedTab: Tab = .search
     @Environment(AuthViewModel.self) var authViewModel
-    @State var viewModel = MoviesViewModel()
+    @State var moviesVM = MoviesViewModel()
+    @State var userVM = UserViewModel()
     
     var body: some View {
         VStack {
@@ -19,22 +20,25 @@ struct MainTabView: View {
                 case .home:
                     HomeView()
                 case .search:
-                    SearchView(viewModel: viewModel)
+                    SearchScreen()
                         .environment(authViewModel)
+                        .environment(moviesVM)
                 case .favourites:
                     FavouritesView()
-                        .environment(viewModel)
+                        .environment(moviesVM)
                         .environment(authViewModel)
                 case .profile:
                     ProfileView()
                         .environment(authViewModel)
+                        
                 }
                 Spacer(minLength: 0)
                 CustomTabBar(selectedTab: $selectedTab)
             }
+            .environment(userVM)
         }
         .background(.bw10)
-        .background(ignoresSafeAreaEdges: .bottom)
+        .background(ignoresSafeAreaEdges: .bottom) 
     }
 }
 

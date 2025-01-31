@@ -6,11 +6,10 @@
 //
 
 import SwiftUI
-@_exported  import Inject
-
 
 @main
 struct MovixAppApp: App {
+    @AppStorage("privacyAccepted") var token: Bool = false
     @State private var authVM = AuthViewModel()
     var body: some Scene {
         WindowGroup {

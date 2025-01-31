@@ -10,14 +10,14 @@ import SwiftUI
 struct ProfileView: View {
     
     @Environment(AuthViewModel.self) var authViewModel
-    @ObserveInjection var inject
+    
     
     var body: some View {
         VStack {
-            Text("Account")
-                .font(.system(size: 22))
-                .foregroundStyle(.white)
-                .fontWeight(.semibold)
+//            Text("Account")
+//                .font(.system(size: 22))
+//                .foregroundStyle(.white)
+//                .fontWeight(.semibold)
             VStack(spacing: 16) {
                 VStack(spacing: 10) {
                     if authViewModel.account?.avatarPath == nil {
@@ -30,6 +30,10 @@ struct ProfileView: View {
                                 image
                                     .resizable()
                                     .aspectRatio(contentMode: .fit)
+                                    .overlay {
+                                        Circle()
+                                            .stroke(LinearGradient(colors: [.marsA, .marsB], startPoint: .leading, endPoint: .trailing), lineWidth: 1)
+                                    }
                             } else if phase.error != nil {
                                 Text("No image available")
                             } else {
@@ -63,7 +67,6 @@ struct ProfileView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(.bw10)
-        .enableInjection()
     }
     private func logout() {
         Task {
@@ -81,6 +84,5 @@ struct ProfileView: View {
     NavigationStack {
         ProfileView()
             .environment(AuthViewModel())
-//            .environmentObject(AuthenticationViewModel())
     }
 }

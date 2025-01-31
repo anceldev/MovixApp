@@ -9,15 +9,19 @@ import SwiftUI
 
 struct ListItemsView: View {
     let movies: [Movie]
-    @Binding var currentPage: Int
+    @Binding var searchText: String
     
     @Environment(AuthViewModel.self) var authViewModel
     @Environment(MoviesViewModel.self) var moviesViewModel
+    @Environment(UserViewModel.self) var userVM
+    @State private var showLoadButton = false
+    
     var body: some View {
+        @Bindable var viewModel = moviesViewModel
         LazyVStack(alignment: .leading) {
             ForEach(movies) { movie in
                 NavigationLink {
-                    MovieView(movie: movie)
+                    MovieScreen(movie: movie)
                         .navigationBarBackButtonHidden()
                         .environment(authViewModel)
                 } label: {
@@ -25,22 +29,45 @@ struct ListItemsView: View {
                         title: movie.title,
                         backdropPath: movie.backdropPath,
                         genres: ["Test"],
-                        voteAverage: movie.voteAverage)
+                        voteAverage: movie.voteAverage,
+                        releaseDate: movie.releaseDate
+                    )
                 }
                 .onAppear(perform: {
-                    if moviesViewModel.isLastItem(id: movie.id) {
-                        self.currentPage += 1
-                        moviesViewModel.getTrendingMovies(page: currentPage)
+                    if searchText.isEmpty {
+                        if movie == moviesViewModel.trendingMovies.last {
+                            viewModel.trendingMoviesPage += 1
+                            print("lan in listitem: \(userVM.language)")
+                            Task {
+                                await viewModel.getTrendingMovies(language: userVM.language)
+                            }
+                        }
+                    }
+                    else {
+                        if movie == moviesViewModel.searchedMovies.last {
+                            viewModel.searchMoviesPage += 1
+                            Task {
+                                await viewModel.searchMovies(searchTerm: searchText, firstPage: false)
+                            }
+                        }
                     }
                 })
-            }   
+            }
         }
         .padding()
+        .onChange(of: searchText) { oldValue, newValue in
+            if !newValue.isEmpty {
+                Task {
+                    await viewModel.searchMovies(searchTerm: searchText)
+                }
+            }
+        }
     }
 }
 
 #Preview {
-    ListItemsView(movies: [Movie.preview], currentPage: .constant(1))
+    ListItemsView(movies: [Movie.preview], searchText: .constant(""))
         .environment(AuthViewModel())
         .environment(MoviesViewModel())
+        .environment(UserViewModel())
 }

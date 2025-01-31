@@ -11,34 +11,43 @@ import Observation
 
 @Observable
 final class MoviesViewModel {
-    var movies: [Movie] = []
+    var trendingMovies: [Movie] = []
+    var searchedMovies: [Movie] = []
     
-    private var trendingMoviesPages: Int = 0
-    private var searchMoviesPages: Int = 0
+    var errorMessage: String?
+    
+    var trendingMoviesPage: Int = 1
+    var searchMoviesPage: Int = 1
+    
     private var favoriteMoviesPages: Int = 0
-    
     var movieGenres: [Genre] = []
     
-//    private let session = URLSession(configuration: .default)
+    let httpClient = HTTPClient()
     
     init() {
-        getTrendingMovies(page: 1)
-//        getMovieGenres()
     }
-
-    func getTrendingMovies(page: Int) {
-        Task {
-            if page == 1 {
-                self.movies = []
-            }
-            let fetchedPage = await ApiTMDB.shared.getTrendingMovies(page: page)
-            self.movies.append(contentsOf: fetchedPage)
+    func getTrendingMovies(language: String = "en-US") async {
+        print("language is:", language)
+        do {
+            let resource = Resource(
+                url: Endpoints.trending(.movie, .week, self.trendingMoviesPage).url,
+                method: .get([
+                    URLQueryItem(name: "language", value: language),
+                    URLQueryItem(name: "page", value: "\(self.trendingMoviesPage)")
+                ]),
+                modelType: MoviesCollection.self
+            )
+            let trendingMovies = try await httpClient.load(resource)
+            self.trendingMovies += trendingMovies.results
+        } catch {
+            print(error.localizedDescription)
+            self.errorMessage = error.localizedDescription
         }
     }
     
     func isLastItem(id: Int) -> Bool {
-        let index = self.movies.firstIndex { $0.id == id }
-        if index == self.movies.count - 1 {
+        let index = self.trendingMovies.firstIndex { $0.id == id }
+        if index == self.trendingMovies.count - 1 {
             return true
         }
         return false
@@ -46,17 +55,32 @@ final class MoviesViewModel {
     
     /// Searchs a movie
     /// - Parameter searchTerm: query for search action
-    func searchMovie(searchTerm: String) {
-        
-        Task {
-            do {
-                self.movies = try await ApiTMDB.shared.searchMovies(searchTerm: searchTerm)
-            } catch {
-                print("DEBUG - Error: ApiTMDB error \(error.localizedDescription)")
+    func searchMovies(searchTerm: String, firstPage: Bool = true) async {
+        do {
+            let resource = Resource(
+                url: Endpoints.search(searchTerm, .movie).url,
+                method: .get(
+                    [
+                        URLQueryItem(name: "page", value: "\(self.searchMoviesPage)"),
+                        URLQueryItem(name: "query", value: searchTerm),
+                        URLQueryItem(name: "language", value: "en-US"),
+                        URLQueryItem(name: "page", value: firstPage ? "1" : "\(self.searchMoviesPage)")
+                    ]
+                ),
+                modelType: MoviesCollection.self
+            )
+            let searchedMovies = try await httpClient.load(resource)
+            if firstPage {
+                self.searchedMovies = searchedMovies.results
             }
+            else {
+                self.searchedMovies += searchedMovies.results
+            }
+        } catch {
+            print(error.localizedDescription)
+            self.errorMessage = error.localizedDescription
         }
     }
-    
     
     /// Get current movie genres
     func getMovieGenres() {
@@ -68,11 +92,4 @@ final class MoviesViewModel {
             }
         }
     }
-    
-//    func donwloadImage(for movie: Movie) async throws {
-//        guard let index = self.movies.firstIndex(where: { $0.id == movie.id } ), self.movies[index].posterDataPath == nil else { return }
-//        let (data,_) = try await session.data(from: movie.posterPath!)
-//        let dataURL = URL(string: "data:image/jpg;base64," + data.base64EncodedString())
-//        self.movies[index].posterDataPath = dataURL
-//    }
 }

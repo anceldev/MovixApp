@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct MoviesCollection: Decodable {
+struct MoviesCollection: Codable {
     let page: Int
     let results: [Movie]
     let totalPages: Int
@@ -27,5 +27,9 @@ struct MoviesCollection: Decodable {
         self.results = try values.decode([Movie].self, forKey: .results)
         self.totalPages = try values.decode(Int.self, forKey: .totalPages)
         self.totalResults = try values.decode(Int.self, forKey: .totalResults)
+    }
+    
+    func encode(to encoder: any Encoder) throws {
+        
     }
 }

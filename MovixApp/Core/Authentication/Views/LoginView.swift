@@ -13,6 +13,7 @@ struct LoginView: View {
     }
     @Environment(AuthViewModel.self) var authVM
     @FocusState private var focusedField: FocusedField?
+    @State private var showPrivacyRules = false
     
     var body: some View {
         @Bindable var viewModel = authVM
@@ -40,9 +41,9 @@ struct LoginView: View {
                         .textInputAutocapitalization(.never)
                         .focused($focusedField, equals: .password).animation(.easeInOut, value: focusedField)
                         .tint(.white)
-                        .submitLabel(.go)
+                        .submitLabel(.done)
                         .onSubmit {
-                            login()
+                            focusedField = nil
                         }
                     
                     Button(action: {
@@ -54,8 +55,16 @@ struct LoginView: View {
                     .buttonStyle(.capsuleButton(.orangeGradient))
                     .disabled(viewModel.flow == .authenticating)
                     VStack {
-                        Text("By clicking the login button, you accept Privacy")
-                        Text("Policy rules of our company")
+                        Text("By clicking the login button, you accept our")
+//                        HStack {
+                        Button {
+                            showPrivacyRules.toggle()
+                        } label: {
+                            Text("privacy policy rules.")
+                                .underline()
+                        }
+//                            Text("Policy rules of our company")
+//                        }
                     }
                     .multilineTextAlignment(.center)
                     .font(.system(size: 14))
@@ -76,6 +85,10 @@ struct LoginView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(.bw10)
+        .sheet(isPresented: $showPrivacyRules) {
+            PrivacyPoliciyView()
+//                .presentationDetents([.medium])
+        }
     }
     
     @ViewBuilder

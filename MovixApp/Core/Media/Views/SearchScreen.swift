@@ -1,5 +1,5 @@
 //
-//  SearchMedia.swift
+//  SearchScreen.swift
 //  MovixApp
 //
 //  Created by Ancel Dev account on 29/7/24.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-enum ItemsViewOption {
+enum ViewOption {
     case row
     case grid
 }
@@ -16,9 +16,9 @@ struct SearchScreen: View {
 
     @State private var searchTerm: String = ""
     @State private var showFilterSheet: Bool = false
-    @State private var itemsView: ItemsViewOption = .row
-    
-    @Bindable var viewModel: MoviesViewModel
+    @State private var itemsView: ViewOption = .grid
+
+    @Environment(MoviesViewModel.self) var moviesVM
     @Environment(AuthViewModel.self) private var authViewModel
     
     var body: some View {
@@ -34,26 +34,31 @@ struct SearchScreen: View {
                 },
                 itemsView: $itemsView
             )
-            ItemsView(movies: viewModel.movies, fetchAction: searchTerm == "" ? .trending : .search, itemsView: itemsView)
-                .environment(authViewModel)
-                .environment(viewModel)
+            ItemsView(
+                searchTerm: $searchTerm,
+                itemsView: itemsView
+            )
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(.bw10)
-        .onChange(of: searchTerm) {
-            if searchTerm == "" {
-                viewModel.getTrendingMovies(page: 1)
-            } else {
-                viewModel.searchMovie(searchTerm: searchTerm)
-            }
+        .task {
+            await moviesVM.getTrendingMovies()
         }
         .sheet(isPresented: $showFilterSheet, content: {
             FiltersView()
         })
+        .onChange(of: searchTerm) { oldValue, newValue in
+            if !newValue.isEmpty {
+                itemsView = .row
+            } else {
+                itemsView = .grid
+            }
+        }
     }
 }
 
 #Preview {
     MainTabView()
         .environment(AuthViewModel())
+        .environment(MoviesViewModel())
 }

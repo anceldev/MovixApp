@@ -19,18 +19,18 @@ class NetworkManager {
     @MainActor
     func fetchData<T: Decodable>(data: T.Type, from url: URL?) async throws -> T {
         guard let url = url else {
-            throw NetworkError.invalidUrl
+            throw NetworkErrorA.invalidUrl
         }
         let (data, response) = try await URLSession.shared.data(from: url)
         
         guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
-            throw NetworkError.invalidResponse
+            throw NetworkErrorA.invalidResponse
         }
         do {
             let decoder = JSONDecoder()
             return try decoder.decode(T.self, from: data)
         } catch {
-            throw NetworkError.invalidData
+            throw NetworkErrorA.invalidData
         }
     }    
 }

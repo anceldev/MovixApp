@@ -8,36 +8,34 @@
 import SwiftUI
 
 struct MediaGridItem: View {
-    
-    let posterPath: URL?
+//    let posterPath: URL?
+    let posterPath: String?
     let voteAverage: Double?
-    
-    
-    @ObserveInjection var inject
+    @State private var image: Image? = nil
     
     var body: some View {
         ZStack {
-            Color.bw10
-//            AsyncImage(url: posterPath) { phase in
-            AsyncImage(url: posterPath) { phase in
-                switch phase {
-                case .empty:
-                    Color.gray
-                case .success(let image):
+            LinearGradient(colors: [.bw50, .bw90], startPoint: .top, endPoint: .bottom)
+            Group {
+                if let image = image {
                     VStack {
                         image
                             .resizable()
                             .aspectRatio(contentMode: .fill)
                     }
                     .clipped()
-                case .failure(_):
+                } else {
                     ProgressView()
                         .progressViewStyle(.circular)
-                @unknown default:
-                    Color.gray
+                        .aspectRatio(2/3, contentMode: .fill)
+                        .tint(.marsB)
                 }
             }
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .frame(maxWidth: .infinity)
+//            .clipShape(RoundedRectangle(cornerRadius: 12))
+                
+
+            
             if let formattedRate = NumberFormatter.popularity.string(from: NSNumber(value: voteAverage ?? 0.0)) {
                 VStack(alignment: .leading) {
                     ZStack(alignment: .center){
@@ -53,7 +51,14 @@ struct MediaGridItem: View {
             }
         }
         .background(.clear)
-        .enableInjection()
+        .aspectRatio(2/3, contentMode: .fill)
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .onAppear {
+            Task {
+                let image = await Movie.getBackdropImage(posterPath: posterPath)
+                self.image = image
+            }
+        }
     }
 }
 

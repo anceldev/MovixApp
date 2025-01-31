@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum NetworkError: Error {
+enum NetworkErrorA: Error {
     case invalidUrl
     case invalidResponse
     case invalidData
@@ -34,11 +34,11 @@ class ApiTMDB {
             let request = URLRequest(url: url)
             let movie = try await fetchData(data: Movie.self, from: request)
             return movie
-        } catch NetworkError.invalidUrl {
+        } catch NetworkErrorA.invalidUrl {
             print("DEBUG - Error: Wrong url provided")
-        } catch NetworkError.invalidResponse {
+        } catch NetworkErrorA.invalidResponse {
             print("DEBUG - Error: Invalid response form URL")
-        } catch NetworkError.invalidData {
+        } catch NetworkErrorA.invalidData {
             print("DEBUG - Error: Invalid data from response")
         } catch {
             print("DEBUG - Error: Unknown error")
@@ -77,16 +77,16 @@ class ApiTMDB {
         do {
             let urlString = baseEndpoint + baseSearch.rawValue + "/" + mediaSearch.rawValue + "/" + timeWindow.rawValue + "?api_key=\(self.apiKey)" + "&page=\(page)"
             guard let url = URL(string: urlString) else {
-                throw NetworkError.invalidUrl
+                throw NetworkErrorA.invalidUrl
             }
             let request = URLRequest(url: url)
             let movies = try await fetchData(data: MoviesCollection.self, from: request)
             return movies.results
-        } catch NetworkError.invalidUrl {
+        } catch NetworkErrorA.invalidUrl {
             print("DEBUG - Error: Wrong url provided in trneding")
-        } catch NetworkError.invalidResponse {
+        } catch NetworkErrorA.invalidResponse {
             print("DEBUG - Error: Invalid response form URL")
-        } catch NetworkError.invalidData {
+        } catch NetworkErrorA.invalidData {
             print("DEBUG - Error: Invalid data from response")
         } catch {
             print("DEBUG - Error: Unknown error")
@@ -103,17 +103,17 @@ class ApiTMDB {
             let urlString = baseEndpoint + endpoint.rawValue + "/" + mediaSearch.rawValue + "?api_key=" + apiKey + "&" + query
             
             guard let url = URL(string: urlString) else {
-                throw NetworkError.invalidUrl
+                throw NetworkErrorA.invalidUrl
             }
             let request = URLRequest(url: url)
             let collection = try await fetchData(data: MoviesCollection.self, from: request)
             return collection.results
             
-        } catch NetworkError.invalidUrl {
+        } catch NetworkErrorA.invalidUrl {
             print("DEBUG - Error: Wrong url provided in trneding")
-        } catch NetworkError.invalidResponse {
+        } catch NetworkErrorA.invalidResponse {
             print("DEBUG - Error: Invalid response form URL")
-        } catch NetworkError.invalidData {
+        } catch NetworkErrorA.invalidData {
             print("DEBUG - Error: Invalid data from response")
         } catch {
             print("DEBUG - Error: Unknown error")
@@ -124,11 +124,11 @@ class ApiTMDB {
     func getMovieGenres(for media: Endpoint) async throws -> [Genre] {
         let endpoint = baseEndpoint + media.rawValue + "api_key=" + apiKey
         do {
-            guard let url = URL(string: endpoint) else { throw NetworkError.invalidUrl }
+            guard let url = URL(string: endpoint) else { throw NetworkErrorA.invalidUrl }
             let request = URLRequest(url: url)
             let genres = try await fetchData(data: Genres.self, from: request)
             return genres.genres
-        } catch NetworkError.invalidUrl {
+        } catch NetworkErrorA.invalidUrl {
             print("DEBUG - Error: Wrong url provided")
         } catch {
             print("DEBUG - Error: error in network manager \(error.localizedDescription)")
@@ -146,15 +146,15 @@ class ApiTMDB {
         let mediaSerch = Endpoint.movie
         do {
             let urlString = baseEndpoint + mediaSerch.rawValue + "/\(id)/credits?api_key=" + apiKey
-            guard let url = URL(string: urlString) else { throw NetworkError.invalidUrl }
+            guard let url = URL(string: urlString) else { throw NetworkErrorA.invalidUrl }
             let request = URLRequest(url: url)
             let credits = try await fetchData(data: Credits.self, from: request)
             return credits.cast
-        } catch NetworkError.invalidUrl {
+        } catch NetworkErrorA.invalidUrl {
             print("DEBUG - Error: Wrong url provided in casting")
-        } catch NetworkError.invalidResponse {
+        } catch NetworkErrorA.invalidResponse {
             print("DEBUG - Error: Invalid response form URL")
-        } catch NetworkError.invalidData {
+        } catch NetworkErrorA.invalidData {
             print("DEBUG - Error: Invalid data from response")
         } catch {
             print("DEBUG - Error: Unknown error")
@@ -166,15 +166,15 @@ class ApiTMDB {
         let personSearch = Endpoint.people
         do {
             let urlString = baseEndpoint + personSearch.rawValue + "/\(id)?api_key=" + apiKey
-            guard let url = URL(string: urlString) else { throw NetworkError.invalidUrl }
+            guard let url = URL(string: urlString) else { throw NetworkErrorA.invalidUrl }
             let request = URLRequest(url: url)
             let person = try await fetchData(data: People.self, from: request)
             return person
-        } catch NetworkError.invalidUrl {
+        } catch NetworkErrorA.invalidUrl {
             print("DEBUG - Error: Wrong url provided in casting")
-        } catch NetworkError.invalidResponse {
+        } catch NetworkErrorA.invalidResponse {
             print("DEBUG - Error: Invalid response form URL")
-        } catch NetworkError.invalidData {
+        } catch NetworkErrorA.invalidData {
             print("DEBUG - Error: Invalid data from response")
         } catch {
             print("DEBUG - Error: Unknown error")
@@ -260,13 +260,13 @@ class ApiTMDB {
 
         let (data, response) = try await URLSession.shared.data(for: request)
         guard let _ = response as? HTTPURLResponse else {
-            throw NetworkError.invalidResponse
+            throw NetworkErrorA.invalidResponse
         }
         do {
             let decoder = JSONDecoder()
             return try decoder.decode(T.self, from: data)
         } catch {
-            throw NetworkError.invalidData
+            throw NetworkErrorA.invalidData
         }
     }
     
@@ -283,16 +283,16 @@ extension ApiTMDB {
         case movieGenres = "genre/movie/list?"
         case tvGenres = "genre/tv/list?"
     }
-    enum MediaType: String {
-        case movie
-        case tv
-    }
+//    enum MediaType: String {
+//        case movie
+//        case tv
+//    }
     enum Lang: String {
         case en = "language=en-US"
         case es = "language=es-ES"
     }
-    enum TimeWindow: String {
-        case day
-        case week
-    }
+//    enum TimeWindow: String {
+//        case day
+//        case week
+//    }
 }

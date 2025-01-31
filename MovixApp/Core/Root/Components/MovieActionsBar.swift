@@ -33,17 +33,6 @@ struct MovieActionsBar: View {
                     }
                 })
                 .foregroundStyle(.bw50)
-//                Button(action: {
-//                    print("Download")
-//                }, label: {
-//                    VStack(spacing: 12) {
-//                        Image(systemName: "tray.and.arrow.down")
-//                            .resizable()
-//                            .frame(width: 24, height: 24)
-//                        Text("Download")
-//                            .font(.system(size: 12))
-//                    }
-//                })
                 .foregroundStyle(.bw50)
                 Button(action: {
                     toggleFavorite()
@@ -58,18 +47,6 @@ struct MovieActionsBar: View {
                     }
                     .foregroundStyle(isFavorite ? .blue1 : .bw50)
                 })
-//                Button(action: {
-//                    print("Rate")
-//                }, label: {
-//                    VStack(spacing: 12) {
-//                        Image(systemName: "person.badge.plus")
-//                            .resizable()
-//                            .frame(width: 24, height: 24)
-//                        Text("Live")
-//                            .font(.system(size: 12))
-//                    }
-//                })
-//                .foregroundStyle(.bw50)
             }
             .padding(.top, 26)
         }

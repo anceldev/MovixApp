@@ -54,15 +54,6 @@ struct SettingsList: View {
                             Image(systemName: "chevron.right")
                         }
                     }
-//                    NavigationLink {
-//                        Text("History")
-//                    } label: {
-//                        HStack {
-//                            Label("History", systemImage: "clock.arrow.circlepath")
-//                            Spacer(minLength: 0)
-//                            Image(systemName: "chevron.right")
-//                        }
-//                    }
                 }
                 .padding(16)
                 .background(Color.bw20)
@@ -76,7 +67,8 @@ struct SettingsList: View {
         
                 VStack(spacing: 16) {
                     NavigationLink {
-                        Text("Support")
+                        SupportScreen()
+                            .navigationBarBackButtonHidden()
                     } label: {
                         HStack {
                             Label("Support", systemImage: "lifepreserver")
@@ -85,8 +77,10 @@ struct SettingsList: View {
                         }
                     }
                     .padding(.top, 6)
+                    
                     NavigationLink {
-                        Text("About")
+                        AboutScreen()
+                            .navigationBarBackButtonHidden()
                     } label: {
                         HStack {
                             Label("About", systemImage: "info.circle")

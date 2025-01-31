@@ -27,17 +27,18 @@ struct BannerTopBar: View {
                         Image(systemName: "chevron.left")
                             .font(.title2)
                     }
-                    .frame(width: 22, height: 22)
+                    .padding(4)
+                    .padding(.horizontal, 4)
                 })
             }
             Spacer(minLength: 0)
-            if shareButton {
-                ShareLink(item: URL(string: "https://www.themoviedb.org/")!) {
-                    Label("Share", systemImage: "square.and.arrow.up")
-                        .labelStyle(.iconOnly)
-                        .font(.title2)
-                }
-            }
+//            if shareButton {
+//                ShareLink(item: URL(string: "https://www.themoviedb.org/")!) {
+//                    Label("Share", systemImage: "square.and.arrow.up")
+//                        .labelStyle(.iconOnly)
+//                        .font(.title2)
+//                }
+//            }
         }
         .opacity(0.8)
         .padding(8)

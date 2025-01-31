@@ -45,10 +45,15 @@ struct SignUpView: View {
                         .textInputAutocapitalization(.never)
                         .focused($focusedField, equals: .password).animation(.easeInOut, value: focusedField)
                     
-                    Button("Login") {
-                        print("Login...")
+                    
+                    Button {
+                        print("Sign up...")
+                    } label: {
+                        Text("Sign up")
+                            .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.capsuleButton(.orangeGradient))
+                    
                     VStack {
                         Text("By clicking the login button, you accept Privacy")
                         Text("Policy rules of our company")

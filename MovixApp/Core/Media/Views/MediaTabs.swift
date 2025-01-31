@@ -10,7 +10,6 @@ import SwiftUI
 struct MediaTabs: View {
     var body: some View {
         ScrollView(.horizontal) {
-//            GeneralInfo()
             MediaDetailsInfo()
         }
     }

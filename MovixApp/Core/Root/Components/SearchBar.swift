@@ -10,7 +10,7 @@ import SwiftUI
 struct SearchBar: View {
     @Binding var searchTerm: String
     var filterAction: () -> Void
-    @Binding var itemsView: ItemsViewOption
+    @Binding var itemsView: ViewOption
     
     var body: some View {
         HStack(spacing: 16) {
@@ -20,7 +20,7 @@ struct SearchBar: View {
                     .padding(.leading, 12)
                     .padding(.trailing, 4)
                 TextField("Search...", text: $searchTerm, prompt: Text("Search...").foregroundStyle(.bw50))
-                    .tint(.bw90)
+                    .tint(Color.bw90)
                 
                 Button(action: {
                     searchTerm = ""

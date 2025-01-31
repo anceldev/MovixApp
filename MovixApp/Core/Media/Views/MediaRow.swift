@@ -12,6 +12,15 @@ struct MediaRow: View {
     let backdropPath: URL?
     let genres: [String]
     let voteAverage: Double?
+    let releaseDate: Date?
+    
+    init(title: String, backdropPath: URL? = nil, genres: [String] = [], voteAverage: Double? = nil, releaseDate: Date? = nil ) {
+        self.title = title
+        self.backdropPath = backdropPath
+        self.genres = genres
+        self.voteAverage = voteAverage
+        self.releaseDate = releaseDate
+    }
     
     var body: some View {
         HStack {
@@ -33,7 +42,6 @@ struct MediaRow: View {
                                             .frame(width: size.width * 0.4, height: 88)
                                     }
                                     .clipped()
-//                                    .clipShape(RoundedRectangle(cornerRadius: 15))
                                 case .failure:
                                     Image(systemName: "photo")
                                 @unknown default:
@@ -58,13 +66,17 @@ struct MediaRow: View {
                     }
                     .frame(width: size.width * 0.4)
                     .frame(maxHeight: .infinity)
-                    HStack {
+                    VStack(alignment: .leading) {
                         Text(title)
+                            .font(.system(size: 20))
                             .fontWeight(.semibold)
                             .foregroundStyle(.white)
                             .padding(.top, 8)
+                        if let releaseDate = releaseDate {
+                            Text(releaseDate.releaseDate())
+                        }
                     }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
                 }
                 .frame(maxWidth: size.width)
             }
@@ -80,7 +92,8 @@ struct MediaRow: View {
         title: Movie.preview.title,
         backdropPath: Movie.preview.backdropPath,
         genres: ["Drama"],
-        voteAverage: Movie.preview.voteAverage ?? 0.0
+        voteAverage: Movie.preview.voteAverage ?? 0.0,
+        releaseDate: .now
     )
     .background(.bw20)
 })

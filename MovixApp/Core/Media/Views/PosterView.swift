@@ -15,28 +15,31 @@ struct PosterView: View {
     let duration: String
     let isAdult: Bool?
     let releasedDate: String
-    let size: CGSize
     let id: Int
     
     var body: some View {
         ZStack {
+            Color.gray
+                .aspectRatio(27/40, contentMode: .fill)
             AsyncImage(url: posterURL) { phase in
                 switch phase {
                 case .empty:
-                    Color.gray
+                    ProgressView()
+                        .tint(.marsB)
                 case .success(let image):
                     image
                         .resizable()
-                        .scaledToFill()
-                        .frame(width: size.width, height: size.height * 0.75, alignment: .top)
+                        .aspectRatio(27/40, contentMode: .fill)
                 case .failure:
-                    Image(systemName: "photo")
+                    Image(systemName: "photo.slashed")
                         .font(.largeTitle)
                 @unknown default:
                     ProgressView()
+                        .tint(.marsA)
                 }
             }
             .clipped()
+            
             LinearGradient(
                 stops: [
                     .init(color: .bw10.opacity(0.59), location: 0),
@@ -50,7 +53,7 @@ struct PosterView: View {
                 Spacer()
 
                 NavigationLink {
-                    ProvidersView(id: id)
+                    ProvidersScreen(id: id)
                         .navigationBarBackButtonHidden()
                 } label: {
                     Label("Providers", systemImage: "play.display")
@@ -85,13 +88,9 @@ struct PosterView: View {
         .frame(maxWidth: .infinity)
     }
 }
-
-//#Preview {
-//    PosterView(posterURL: Movie.preview.posterPath, duration: Movie.preview.duration, isAdult: false, releasedDate: Movie.preview.releaseDate?.yearString ?? "1900")
-//}
 #Preview(body: {
     NavigationStack {
-        MovieView(movie: Movie.preview)
+        MovieScreen(movie: Movie.preview)
             .environment(AuthViewModel())
     }
 })

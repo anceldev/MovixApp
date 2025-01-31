@@ -289,7 +289,7 @@ class AuthViewModel {
     ///   - mediaType: media type of item. ``ApiTMDB.MediaType``
     ///   - isFavorite: `true` or `false` the item
     @MainActor
-    func toggleFavorite(id: Int, mediaType: ApiTMDB.MediaType, isFavorite: Bool) async throws {
+    func toggleFavorite(id: Int, mediaType: MediaType, isFavorite: Bool) async throws {
         do {
             let statusCode = try await ApiTMDB.shared.toggleFavorite(id: id, mediaType: .movie, isFavorite: isFavorite, accountId: account?.id ?? 0, sessionId: imdbSession)
             switch statusCode {

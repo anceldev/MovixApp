@@ -17,29 +17,24 @@ struct ItemsView: View {
     
     @Environment(AuthViewModel.self) var authViewModel
     @Environment(MoviesViewModel.self) var moviesViewModel
-    @State private var currentPage = 1
-    
-    let movies: [Movie]
-    let fetchAction: FetchAction
-    let itemsView: ItemsViewOption
+
+    @Binding var searchTerm: String
+    let itemsView: ViewOption
     
     var body: some View {
+        @Bindable var moviesVM = moviesViewModel
         ScrollView(.vertical) {
-            if movies.count > 0 {
                 switch itemsView {
                 case .row:
-                    ListItemsView(movies: movies, currentPage: $currentPage)
-                        .environment(authViewModel)
-                        .environment(moviesViewModel)
+                    ListItemsView(movies: searchTerm.isEmpty ? moviesVM.trendingMovies : moviesVM.searchedMovies, searchText: $searchTerm)
                 case .grid:
-                    GridItemsView(movies: movies, currentPage: $currentPage)
+                    GridItemsView(
+                        movies: searchTerm.isEmpty ? moviesVM.trendingMovies : moviesVM.searchedMovies,
+                        searchText: $searchTerm
+                    )
                         .environment(authViewModel)
                         .environment(moviesViewModel)
                 }
-//                .padding()
-            } else {
-                ProgressView()
-            }
         }
     }
 }
@@ -47,7 +42,7 @@ struct ItemsView: View {
 #Preview {
     NavigationStack {
         VStack {
-            ItemsView(movies: [Movie.preview], fetchAction: .trending, itemsView: .grid)
+            ItemsView(searchTerm: .constant(""), itemsView: .grid)
                 .environment(AuthViewModel())
                 .environment(MoviesViewModel())
         }
