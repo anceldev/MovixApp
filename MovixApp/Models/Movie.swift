@@ -22,14 +22,15 @@ struct ImageLoader {
         }
     }
 }
-
-fileprivate enum BackdropSizes: String, CaseIterable {
+    
+enum BackdropSize: String, CaseIterable {
     case w300
     case w780
     case w1280
     case original
 }
-fileprivate enum PosterSizes: String, CaseIterable {
+
+enum PosterSize: String, CaseIterable {
     case w92
     case w154
     case w185
@@ -39,7 +40,23 @@ fileprivate enum PosterSizes: String, CaseIterable {
     case original
 }
 
-struct Movie: Decodable, Identifiable, Hashable {
+//fileprivate enum BackdropSizes: String, CaseIterable, SizesEnum {
+//    case w300
+//    case w780
+//    case w1280
+//    case original
+//}
+//fileprivate enum PosterSizes: String, CaseIterable, SizesEnum {
+//    case w92
+//    case w154
+//    case w185
+//    case w342
+//    case w500
+//    case w780
+//    case original
+//}
+
+struct Movie: Codable, Identifiable, Hashable {
     var id: Int
     var title: String
     var originalTitle: String?
@@ -51,6 +68,8 @@ struct Movie: Decodable, Identifiable, Hashable {
     
     var posterData: Data?
     var backdropData: Data?
+    var genres: [Genre]?
+//    var genreIds: [Int]?
     
 //    var posterDataPath: URL?
     
@@ -66,7 +85,7 @@ struct Movie: Decodable, Identifiable, Hashable {
         guard let runtime else {
             return ""
         }
-        return "\(runtime/60)h\(runtime%60)min"
+        return "\(runtime/60)h \(runtime%60)min"
     }
     
     init(id: Int,
@@ -77,6 +96,7 @@ struct Movie: Decodable, Identifiable, Hashable {
          releaseDate: Date? = nil,
          posterPath: URL? = nil,
          backdropPath: URL? = nil,
+         genres: [Genre] = [],
          budget: Double? = nil,
          homepageURL: URL? = nil,
          popularity: Double? = nil,
@@ -92,12 +112,31 @@ struct Movie: Decodable, Identifiable, Hashable {
         self.releaseDate = releaseDate
         self.posterPathUrl = posterPath
         self.backdropPath = backdropPath
+        self.genres = genres
         self.budget = budget
         self.homepageURL = homepageURL
         self.popularity = popularity
         self.voteAverage = voteAverage
         self.voteCount = voteCount
         self.isAdult = isAdult
+        self.genres = []
+    }
+    
+    static func getImageFromPath<T:CaseIterable & RawRepresentable>(backdropPath: String?,_ availableSizes: T) async -> Image? {
+        guard let imagePath = backdropPath else { return nil }
+        do {
+            for size in T.allCases {
+                let url = URL(string: "https://image.tmdb.org/t/p/\(size.rawValue)\(imagePath)")!
+                let (data, _ ) = try await URLSession.shared.data(from: url)
+                if let uiImage = UIImage(data: data) {
+                    return Image(uiImage: uiImage)
+                }
+            }
+            return nil
+        } catch {
+            print(error.localizedDescription)
+            return nil
+        }
     }
     
     static func getBackdropImage(posterPath: String?) async -> Image? {
@@ -138,6 +177,8 @@ extension Movie {
     enum CodingKeys: String, CodingKey {
         case id
         case title
+        case genres
+        case genreIds = "genre_ids"
         case originalTitle = "original_title"
         case overview
         case runtime
@@ -152,6 +193,14 @@ extension Movie {
         case isAdult = "adult"
     }
     
+    func encode(to encoder: Encoder) throws {
+//        var container = encoder.container(keyedBy: CodingKeys.self)
+//        
+//        try container.encode(id, forKey: .id)
+//        try container.encode(title, forKey: .title)
+//        
+//        try container.encodeIfPresent(originalTitle, forKey: .originalTitle)
+    }
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -177,11 +226,14 @@ extension Movie {
         self.backdropPath = URL(string: "https://image.tmdb.org/t/p/w780\(backdropPath ?? "")")
         
         self.budget = try container.decodeIfPresent(Double.self, forKey: .budget)
-        self.homepageURL = try container.decodeIfPresent(URL.self, forKey: .homepageURL)
+//        self.homepageURL = try container.decodeIfPresent(URL.self, forKey: .homepageURL)
+        self.homepageURL = nil
         self.popularity = try container.decodeIfPresent(Double.self, forKey: .popularity)
         self.voteAverage = try container.decodeIfPresent(Double.self, forKey: .voteAverage)
         self.voteCount = try container.decodeIfPresent(Int.self, forKey: .voteCount)
         self.isAdult = try container.decodeIfPresent(Bool.self, forKey: .isAdult)
+        self.genres = try container.decodeIfPresent([Genre].self, forKey: .genres)
+//        self.genreIds = try container.decode([Int].self, forKey: .genreIds)
     }
 }
 extension Date {
@@ -203,6 +255,7 @@ extension Movie {
         releaseDate: .now,
         posterPath: URL(string: "https://image.tmdb.org/t/p/w500/8cdWjvZQUExUUTzyp4t6EDMubfO.jpg"),
         backdropPath: URL(string: "https://image.tmdb.org/t/p/w500/9l1eZiJHmhr5jIlthMdJN5WYoff.jpg"),
+        genres: [.init(id: 1, name: "Action"), .init(id: 2, name: "Hero")],
         budget: 250000000,
         homepageURL: URL(string: "https://www.marvel.com/movies/deadpool-and-wolverine"),
         popularity: 2178.995,
@@ -211,86 +264,3 @@ extension Movie {
         isAdult: false
     )
 }
-
-/**
- {
-   "genres": [
-     {
-       "id": 28,
-       "name": "Action"
-     },
-     {
-       "id": 12,
-       "name": "Adventure"
-     },
-     {
-       "id": 16,
-       "name": "Animation"
-     },
-     {
-       "id": 35,
-       "name": "Comedy"
-     },
-     {
-       "id": 80,
-       "name": "Crime"
-     },
-     {
-       "id": 99,
-       "name": "Documentary"
-     },
-     {
-       "id": 18,
-       "name": "Drama"
-     },
-     {
-       "id": 10751,
-       "name": "Family"
-     },
-     {
-       "id": 14,
-       "name": "Fantasy"
-     },
-     {
-       "id": 36,
-       "name": "History"
-     },
-     {
-       "id": 27,
-       "name": "Horror"
-     },
-     {
-       "id": 10402,
-       "name": "Music"
-     },
-     {
-       "id": 9648,
-       "name": "Mystery"
-     },
-     {
-       "id": 10749,
-       "name": "Romance"
-     },
-     {
-       "id": 878,
-       "name": "Science Fiction"
-     },
-     {
-       "id": 10770,
-       "name": "TV Movie"
-     },
-     {
-       "id": 53,
-       "name": "Thriller"
-     },
-     {
-       "id": 10752,
-       "name": "War"
-     },
-     {
-       "id": 37,
-       "name": "Western"
-     }
-   ]
- }
- */

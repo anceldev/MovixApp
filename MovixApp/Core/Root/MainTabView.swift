@@ -18,17 +18,17 @@ struct MainTabView: View {
             VStack(spacing: 0) {
                 switch selectedTab {
                 case .home:
-                    HomeView()
+                    HomeScreen()
                 case .search:
                     SearchScreen()
                         .environment(authViewModel)
                         .environment(moviesVM)
                 case .favourites:
-                    FavouritesView()
+                    FavouritesScreen()
                         .environment(moviesVM)
                         .environment(authViewModel)
                 case .profile:
-                    ProfileView()
+                    ProfileScreen()
                         .environment(authViewModel)
                         
                 }

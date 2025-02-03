@@ -11,9 +11,10 @@ import Observation
 
 @Observable
 final class MoviesViewModel {
-    var trendingMovies: [Movie] = []
-    var searchedMovies: [Movie] = []
-    
+//    var trendingMovies: [Movie] = []
+    var trendingMovies: [ShortMovie] = []
+    var searchedMovies: [ShortMovie] = []
+//    var searchedMovies: [Movie] = []
     var errorMessage: String?
     
     var trendingMoviesPage: Int = 1
@@ -21,11 +22,50 @@ final class MoviesViewModel {
     
     private var favoriteMoviesPages: Int = 0
     var movieGenres: [Genre] = []
+    var tvGenres: [Genre] = []
     
     let httpClient = HTTPClient()
     
     init() {
+        Task {
+            await getMovieGenres()
+            await getTvGenres()
+        }
     }
+    
+    func getMovieGenres(language: String = "en") async {
+        do {
+            let resource = Resource(
+                url: Endpoints.genre(.movie).url,
+                method: .get([
+                    URLQueryItem(name: "language", value: language)
+                ]),
+                modelType: Genres.self
+            )
+            let movieGenres = try await httpClient.load(resource)
+            self.movieGenres = movieGenres.genres
+        } catch {
+            print(error.localizedDescription)
+            self.errorMessage = error.localizedDescription
+        }
+    }
+    func getTvGenres(language: String = "en") async {
+        do {
+            let resource = Resource(
+                url: Endpoints.genre(.tv).url,
+                method: .get([
+                    URLQueryItem(name: "language", value: language)
+                ]),
+                modelType: Genres.self
+            )
+            let tvGenres = try await httpClient.load(resource)
+            self.tvGenres = tvGenres.genres
+        } catch {
+            print(error.localizedDescription)
+            self.errorMessage = errorMessage
+        }
+    }
+    
     func getTrendingMovies(language: String = "en-US") async {
         print("language is:", language)
         do {
@@ -35,7 +75,8 @@ final class MoviesViewModel {
                     URLQueryItem(name: "language", value: language),
                     URLQueryItem(name: "page", value: "\(self.trendingMoviesPage)")
                 ]),
-                modelType: MoviesCollection.self
+//                modelType: MoviesCollection.self
+                modelType: PageCollection<ShortMovie>.self
             )
             let trendingMovies = try await httpClient.load(resource)
             self.trendingMovies += trendingMovies.results
@@ -67,7 +108,8 @@ final class MoviesViewModel {
                         URLQueryItem(name: "page", value: firstPage ? "1" : "\(self.searchMoviesPage)")
                     ]
                 ),
-                modelType: MoviesCollection.self
+//                modelType: MoviesCollection.self
+                modelType: PageCollection<ShortMovie>.self
             )
             let searchedMovies = try await httpClient.load(resource)
             if firstPage {

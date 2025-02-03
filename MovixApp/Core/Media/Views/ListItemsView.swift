@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct ListItemsView: View {
-    let movies: [Movie]
+//    let movies: [Movie]
+    let movies: [ShortMovie]
     @Binding var searchText: String
     
     @Environment(AuthViewModel.self) var authViewModel
@@ -21,16 +22,15 @@ struct ListItemsView: View {
         LazyVStack(alignment: .leading) {
             ForEach(movies) { movie in
                 NavigationLink {
-                    MovieScreen(movie: movie)
+                    MovieScreen(movieId: movie.id)
                         .navigationBarBackButtonHidden()
                         .environment(authViewModel)
                 } label: {
                     MediaRow(
                         title: movie.title,
                         backdropPath: movie.backdropPath,
-                        genres: ["Test"],
-                        voteAverage: movie.voteAverage,
-                        releaseDate: movie.releaseDate
+                        releaseDate: movie.releaseDate,
+                        voteAverage: movie.voteAverage
                     )
                 }
                 .onAppear(perform: {
@@ -66,8 +66,10 @@ struct ListItemsView: View {
 }
 
 #Preview {
-    ListItemsView(movies: [Movie.preview], searchText: .constant(""))
-        .environment(AuthViewModel())
-        .environment(MoviesViewModel())
-        .environment(UserViewModel())
+    NavigationStack {
+        ListItemsView(movies: [ShortMovie.preview], searchText: .constant(""))
+            .environment(AuthViewModel())
+            .environment(MoviesViewModel())
+            .environment(UserViewModel())
+    }
 }

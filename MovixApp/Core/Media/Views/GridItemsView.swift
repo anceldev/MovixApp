@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct GridItemsView: View {
-    let movies: [Movie]
+//    let movies: [Movie]
+    let movies: [ShortMovie]
     @Binding var searchText: String
     
     let columns = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
@@ -20,7 +21,8 @@ struct GridItemsView: View {
         LazyVGrid(columns: columns, spacing: 8) {
             ForEach(movies) { movie in
                 NavigationLink {
-                    MovieScreen(movie: movie)
+//                    MovieScreen(movie: movie)
+                    MovieScreen(movieId: movie.id)
                         .navigationBarBackButtonHidden()
                         .environment(authViewModel)
                 } label: {
@@ -58,7 +60,7 @@ struct GridItemsView: View {
 }
 
 #Preview {
-    GridItemsView(movies: [Movie.preview], searchText: .constant(""))
+    GridItemsView(movies: [ShortMovie.preview], searchText: .constant(""))
         .environment(AuthViewModel())
         .environment(MoviesViewModel())
 }

@@ -51,4 +51,5 @@ struct BannerTopBar: View {
 #Preview {
     BannerTopBar(true)
         .background(.bw10)
+        .environment(MovieViewModel())
 }

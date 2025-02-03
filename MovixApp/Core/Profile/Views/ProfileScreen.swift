@@ -1,5 +1,5 @@
 //
-//  ProfileView.swift
+//  ProfileScreen.swift
 //  MovixApp
 //
 //  Created by Ancel Dev account on 13/7/24.
@@ -7,17 +7,15 @@
 
 import SwiftUI
 
-struct ProfileView: View {
+struct ProfileScreen: View {
     
     @Environment(AuthViewModel.self) var authViewModel
+    
+    @State private var userVM = UserViewModel()
     
     
     var body: some View {
         VStack {
-//            Text("Account")
-//                .font(.system(size: 22))
-//                .foregroundStyle(.white)
-//                .fontWeight(.semibold)
             VStack(spacing: 16) {
                 VStack(spacing: 10) {
                     if authViewModel.account?.avatarPath == nil {
@@ -52,6 +50,7 @@ struct ProfileView: View {
                 .padding(.top, 20)
                 VStack(alignment: .leading, spacing: 0) {
                     SettingsList()
+                        .environment(userVM)
                     Button(action: {
                         print("Logout")
                         logout()
@@ -82,7 +81,7 @@ struct ProfileView: View {
 
 #Preview {
     NavigationStack {
-        ProfileView()
+        ProfileScreen()
             .environment(AuthViewModel())
     }
 }

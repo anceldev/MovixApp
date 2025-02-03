@@ -164,36 +164,20 @@ struct TestingView: View {
     
     var body: some View {
         ScrollView{
-            CompositionalView(items: Genres.combinedGenres, id: \.id) { item in
-                
-                Image(item.urlBackground!)
-                    .resizable()
-                    .overlay {
-                        Text(item.name)
-                            .font(.system(size: 16, weight: .medium))
-                            .foregroundStyle(.white)
-                            .shadow(color: .black, radius: 1)
-                    }
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
-//                ZStack{
-//                    Rectangle()
-//                        .fill(.cyan)
-//                    
-//                    Image(item.urlBackground!)
-//                        .resizable()
-//                    
-//                    Text("\(item.name)")
-//                        .font(.system(size: 18, weight: .medium))
-//                        .foregroundStyle(.white)
-//                }
-//                .clipShape(RoundedRectangle(cornerRadius: 12))
-//                .onTapGesture {
-//                    selectedGenre = item.id
-//                    print(selectedGenre)
-//                }
-            }
-            .padding()
-            .padding(.bottom,10)
+//            CompositionalView(items: Genres.combinedGenres, id: \.id) { item in
+//                
+//                Image(item.urlBackground!)
+//                    .resizable()
+//                    .overlay {
+//                        Text(item.name)
+//                            .font(.system(size: 16, weight: .medium))
+//                            .foregroundStyle(.white)
+//                            .shadow(color: .black, radius: 1)
+//                    }
+//                    .clipShape(RoundedRectangle(cornerRadius: 8))
+//            }
+//            .padding()
+//            .padding(.bottom,10)
         }
     }
 }

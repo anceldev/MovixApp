@@ -26,7 +26,6 @@ struct MediaGridItem: View {
                     .clipped()
                 } else {
                     ProgressView()
-                        .progressViewStyle(.circular)
                         .aspectRatio(2/3, contentMode: .fill)
                         .tint(.marsB)
                 }

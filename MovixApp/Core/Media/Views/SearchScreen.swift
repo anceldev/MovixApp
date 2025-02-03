@@ -58,7 +58,9 @@ struct SearchScreen: View {
 }
 
 #Preview {
-    MainTabView()
-        .environment(AuthViewModel())
-        .environment(MoviesViewModel())
+    NavigationStack {
+        MainTabView()
+    }
+    .environment(AuthViewModel())
+    .environment(MoviesViewModel())
 }

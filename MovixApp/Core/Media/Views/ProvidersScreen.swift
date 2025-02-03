@@ -18,7 +18,9 @@ struct ProvidersScreen: View {
             VStack {
                 BannerTopBar(true)
                 ScrollView(.vertical) {
-                    VStack(spacing: 24) {
+                    VStack(alignment: .leading, spacing: 24) {
+                        Text("Providers")
+                            .font(.system(size: 32, weight: .medium))
                         ProvidersList(title: "Stream", providers: viewModel.providers.streamProviders)
                             .background(.clear)
                         ProvidersList(title: "Rent", providers: viewModel.providers.rentProviders)
@@ -38,6 +40,7 @@ struct ProvidersScreen: View {
             }
             .background(.bw10)
             .frame(maxHeight: .infinity)
+            .swipeToDismiss()
 //        }
 //        .background(.bw10)
     }

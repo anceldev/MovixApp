@@ -33,6 +33,7 @@ class ApiTMDB {
             let url = buildUrl(type: .movie, id: id)!
             let request = URLRequest(url: url)
             let movie = try await fetchData(data: Movie.self, from: request)
+//            print(movie.genres)
             return movie
         } catch NetworkErrorA.invalidUrl {
             print("DEBUG - Error: Wrong url provided")
@@ -148,7 +149,7 @@ class ApiTMDB {
             let urlString = baseEndpoint + mediaSerch.rawValue + "/\(id)/credits?api_key=" + apiKey
             guard let url = URL(string: urlString) else { throw NetworkErrorA.invalidUrl }
             let request = URLRequest(url: url)
-            let credits = try await fetchData(data: Credits.self, from: request)
+            let credits = try await fetchData(data: Credit.self, from: request)
             return credits.cast
         } catch NetworkErrorA.invalidUrl {
             print("DEBUG - Error: Wrong url provided in casting")
@@ -283,16 +284,8 @@ extension ApiTMDB {
         case movieGenres = "genre/movie/list?"
         case tvGenres = "genre/tv/list?"
     }
-//    enum MediaType: String {
-//        case movie
-//        case tv
-//    }
     enum Lang: String {
         case en = "language=en-US"
         case es = "language=es-ES"
     }
-//    enum TimeWindow: String {
-//        case day
-//        case week
-//    }
 }

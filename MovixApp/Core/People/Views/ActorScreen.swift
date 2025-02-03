@@ -18,40 +18,41 @@ struct ActorScreen: View {
     }
     
     var body: some View {
-            ZStack(alignment: .top) {
-                ScrollView(.vertical) {
-                    ZStack {
-                        ActorPhoto()
-                        LinearGradient(
-                            stops: [
-                                .init(color: .bw10.opacity(0.59), location: 0),
-                                .init(color: .bw10.opacity(0), location: 0.48),
-                                .init(color: .bw10, location: 1)
-                            ],
-                            startPoint: .bottom,
-                            endPoint: .top)
-                        VStack(alignment: .leading){
-                            Spacer()
-                        }
-                        .padding(.horizontal)
-                        .padding(.vertical, 5)
-                        
+        ZStack(alignment: .top) {
+            ScrollView(.vertical) {
+                ZStack {
+                    ActorPhoto()
+                    LinearGradient(
+                        stops: [
+                            .init(color: .bw10.opacity(0.59), location: 0),
+                            .init(color: .bw10.opacity(0), location: 0.48),
+                            .init(color: .bw10, location: 1)
+                        ],
+                        startPoint: .bottom,
+                        endPoint: .top)
+                    VStack(alignment: .leading){
+                        Spacer()
                     }
-                    VStack {
-                        ActorData()
-                        if let bio = viewModel.actor?.biography, bio != "" {
-                            ActorBio(bio: bio)
-                        }
-                    }
-                    .foregroundStyle(.white)
-                    .padding()
+                    .padding(.horizontal)
+                    .padding(.vertical, 5)
                     
                 }
-                BannerTopBar(true)
-                    .padding(.top, 44)
+                VStack {
+                    ActorData()
+                    if let bio = viewModel.actor?.biography, bio != "" {
+                        ActorBio(bio: bio)
+                    }
+                }
+                .foregroundStyle(.white)
+                .padding()
+                
             }
-            .background(.bw10)
-            .ignoresSafeArea()
+            BannerTopBar(true)
+                .padding(.top, 44)
+        }
+        .background(.bw10)
+        .ignoresSafeArea()
+        .swipeToDismiss()
     }
     @ViewBuilder
     func ActorPhoto() -> some View {

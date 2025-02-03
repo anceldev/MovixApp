@@ -1,5 +1,5 @@
 //
-//  HomeView.swift
+//  HomeScreen.swift
 //  MovixApp
 //
 //  Created by Ancel Dev account on 1/8/24.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct HomeView: View {
+struct HomeScreen: View {
     var body: some View {
         VStack(alignment: .center) {
             Spacer()
@@ -18,5 +18,5 @@ struct HomeView: View {
 }
 
 #Preview {
-    HomeView()
+    HomeScreen()
 }

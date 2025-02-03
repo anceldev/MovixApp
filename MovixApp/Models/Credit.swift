@@ -1,5 +1,5 @@
 //
-//  Credits.swift
+//  Credit.swift
 //  MovixApp
 //
 //  Created by Ancel Dev account on 29/7/24.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Credits: Identifiable, Decodable {
+struct Credit: Identifiable, Codable {
     let id: Int
     let cast: [Cast]
     
@@ -20,6 +20,9 @@ struct Credits: Identifiable, Decodable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.id = try container.decode(Int.self, forKey: .id)
         self.cast = try container.decode([Cast].self, forKey: .cast)
+    }
+    func encode(to encoder: any Encoder) throws {
+        
     }
 }
 struct Cast: Identifiable, Decodable {
@@ -41,7 +44,6 @@ struct Cast: Identifiable, Decodable {
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        
         self.id = try container.decode(Int.self, forKey: .id)
         self.originalName = try container.decode(String.self, forKey: .originalName)
         let profile = try container.decodeIfPresent(String.self, forKey: .profilePath)

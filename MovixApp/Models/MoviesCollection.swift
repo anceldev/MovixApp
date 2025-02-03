@@ -7,6 +7,36 @@
 
 import Foundation
 
+struct ReviewCollection: Codable {
+    let id: Int
+    let page: Int
+    let results: [Review]
+    let totalPages: Int
+    let totalResults: Int
+    
+    enum CodingKeys: String, CodingKey {
+        case id
+        case page
+        case results
+        case totalPages = "total_pages"
+        case totalResults = "total_results"
+    }
+}
+
+struct PageCollection<T:Codable>: Codable {
+    let page: Int
+    let results: [T]
+    let totalPages: Int
+    let totalResults: Int
+    
+    enum CodingKeys: String, CodingKey {
+        case page
+        case results
+        case totalPages = "total_pages"
+        case totalResults = "total_results"
+    }
+}
+
 struct MoviesCollection: Codable {
     let page: Int
     let results: [Movie]

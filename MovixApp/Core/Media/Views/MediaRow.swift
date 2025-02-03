@@ -8,47 +8,35 @@
 import SwiftUI
 
 struct MediaRow: View {
+
     let title: String
-    let backdropPath: URL?
-    let genres: [String]
-    let voteAverage: Double?
+    let backdropPath: String?
     let releaseDate: Date?
-    
-    init(title: String, backdropPath: URL? = nil, genres: [String] = [], voteAverage: Double? = nil, releaseDate: Date? = nil ) {
-        self.title = title
-        self.backdropPath = backdropPath
-        self.genres = genres
-        self.voteAverage = voteAverage
-        self.releaseDate = releaseDate
-    }
+    let voteAverage: Double?
+    @State private var image: Image? = nil
     
     var body: some View {
         HStack {
-            GeometryReader {
-                let size = $0.size
                 HStack {
                     HStack {
                         ZStack {
-                            AsyncImage(url: backdropPath) { phase in
-                                switch phase {
-                                case .empty:
-                                    Color.gray
-                                case .success(let image):
+                            Group {
+                                if let image = image {
                                     VStack {
-                                        
                                         image
                                             .resizable()
-                                            .aspectRatio(contentMode: .fill)
-                                            .frame(width: size.width * 0.4, height: 88)
+                                            .aspectRatio(16/9, contentMode: .fill)
                                     }
-                                    .clipped()
-                                case .failure:
-                                    Image(systemName: "photo")
-                                @unknown default:
-                                    Color.gray
+                                }
+                                else {
+                                    ProgressView()
+                                        .tint(.marsB)
                                 }
                             }
+                            .frame(maxWidth: .infinity)
                             .clipShape(RoundedRectangle(cornerRadius: 10))
+
+                            
                             if let formattedRate = NumberFormatter.popularity.string(from: NSNumber(value: voteAverage ?? 0.0)) {
                                 VStack(alignment: .leading) {
                                     ZStack(alignment: .center){
@@ -64,7 +52,6 @@ struct MediaRow: View {
                             }
                         }
                     }
-                    .frame(width: size.width * 0.4)
                     .frame(maxHeight: .infinity)
                     VStack(alignment: .leading) {
                         Text(title)
@@ -78,22 +65,24 @@ struct MediaRow: View {
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
                 }
-                .frame(maxWidth: size.width)
-            }
-            .padding(.vertical, 8)
         }
         .frame(maxWidth: .infinity)
         .frame(height: 104)
+        .onAppear {
+            Task {
+                let image = await Movie.getBackdropImage(posterPath: backdropPath)
+                self.image = image
+            }
+        }
     }
 }
 
-#Preview(traits: .sizeThatFitsLayout, body: {
-    MediaRow(
-        title: Movie.preview.title,
-        backdropPath: Movie.preview.backdropPath,
-        genres: ["Drama"],
-        voteAverage: Movie.preview.voteAverage ?? 0.0,
-        releaseDate: .now
-    )
-    .background(.bw20)
-})
+//#Preview(traits: .sizeThatFitsLayout, body: {
+//    MediaRow(
+//        title: "Spiderman 3",
+//        backdropPath: ShortMovie.preview.backdropPath,
+//        releaseDate: .now,
+//        voteAverage: 2.5
+//    )
+//    .background(.bw20)
+//})

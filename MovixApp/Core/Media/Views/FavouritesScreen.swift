@@ -1,5 +1,5 @@
 //
-//  FavouritesView.swift
+//  FavouritesScreen.swift
 //  MovixApp
 //
 //  Created by Ancel Dev account on 1/8/24.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct FavouritesView: View {
+struct FavouritesScreen: View {
     @Environment(AuthViewModel.self) var authViewModel
     @Environment(MoviesViewModel.self) var moviesViewModel
     @State private var showFilterSheet = false
@@ -41,6 +41,6 @@ struct FavouritesView: View {
 }
 
 #Preview {
-    FavouritesView()
+    FavouritesScreen()
         .environment(AuthViewModel())
 }

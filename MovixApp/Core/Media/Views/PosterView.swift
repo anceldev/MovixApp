@@ -90,7 +90,7 @@ struct PosterView: View {
 }
 #Preview(body: {
     NavigationStack {
-        MovieScreen(movie: Movie.preview)
+        MovieScreen(movieId: Movie.preview.id)
             .environment(AuthViewModel())
     }
 })

@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct SettingsList: View {
+    @Environment(UserViewModel.self) var userVM
     let pv: CGFloat = 0.0
     var body: some View {
         VStack(spacing: 16) {
@@ -37,6 +38,17 @@ struct SettingsList: View {
                         }
                     }
                     NavigationLink {
+                        RegionScreen()
+                            .environment(userVM)
+                    } label: {
+                        HStack {
+                            Label("Region", systemImage: "person.2")
+                            Spacer(minLength: 0)
+//                            Image(systemName: "chevron.right")
+                            Text(flag(for: "CO"))
+                        }
+                    }
+                    NavigationLink {
                         Text("Notifications")
                     } label: {
                         HStack {
@@ -54,6 +66,7 @@ struct SettingsList: View {
                             Image(systemName: "chevron.right")
                         }
                     }
+                    
                 }
                 .padding(16)
                 .background(Color.bw20)
@@ -98,5 +111,20 @@ struct SettingsList: View {
         .foregroundStyle(.white)
         .padding()
         
+    }
+    private func flag(for countryCode: String) -> String {
+        let base = 127397
+        var flagString = ""
+        for unicode in countryCode.unicodeScalars {
+            flagString.append(String(UnicodeScalar(base + Int(unicode.value))!))
+        }
+        return flagString
+    }
+}
+
+#Preview {
+    NavigationStack {
+        SettingsList()
+//            .environment(UserViewModel())
     }
 }

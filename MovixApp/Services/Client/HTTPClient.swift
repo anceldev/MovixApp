@@ -35,8 +35,7 @@ struct HTTPClient {
     }
     
     func load<T: Codable>(_ resource: Resource<T>) async throws -> T {
-        var request = URLRequest(url: resource.url)
-        
+        var request = URLRequest(url: resource.url)        
         switch resource.method {
         case .get(let queryItems):
             var components = URLComponents(
@@ -61,7 +60,7 @@ struct HTTPClient {
         configuration.httpAdditionalHeaders = defaultHeaders
         let session = URLSession(configuration: configuration)
         let (data, response) = try await session.data(for: request)
-//        print(String(decoding: data, as: UTF8.self))
+        
         guard let _ = response as? HTTPURLResponse else {
             throw NetworkError.invalidResponse
         }
@@ -69,6 +68,7 @@ struct HTTPClient {
             let result = try JSONDecoder().decode(resource.modelType, from: data)
             return result
         } catch {
+            print(error)
             print(error.localizedDescription)
             throw NetworkError.decodingError
         }
