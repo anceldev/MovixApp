@@ -81,9 +81,6 @@ struct RatingView: View {
             .frame(maxWidth: .infinity)
             .background(.bw20)
             .clipShape(RoundedRectangle(cornerRadius: 20))
-            .onChange(of: currentRate) {
-                print("Rate is: \(currentRate)")
-            }
         }
     }
 }

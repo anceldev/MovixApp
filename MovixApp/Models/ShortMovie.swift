@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct ShortMovie: Codable, Identifiable, Equatable {
+struct ShortMovie: Codable, Identifiable, Equatable, Hashable {
     var id: Int
     var title: String
     var releaseDate: Date?

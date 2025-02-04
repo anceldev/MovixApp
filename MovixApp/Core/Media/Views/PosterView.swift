@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-let genres: [String] = ["Action", "Adventure"]
+//let genres: [String] = ["Action", "Adventure"]
 
 struct PosterView: View {
     
@@ -15,6 +15,7 @@ struct PosterView: View {
     let duration: String
     let isAdult: Bool?
     let releasedDate: String
+    let genres: [Genre]?
     let id: Int
     
     var body: some View {
@@ -52,22 +53,25 @@ struct PosterView: View {
             VStack {
                 Spacer()
 
-                NavigationLink {
-                    ProvidersScreen(id: id)
-                        .navigationBarBackButtonHidden()
-                } label: {
-                    Label("Providers", systemImage: "play.display")
-                        .font(.system(size: 18))
-                        .padding(.horizontal, 16)
-                        .frame(height: 44)
-                        .background(LinearGradient(colors: [Color.marsA, Color.marsB], startPoint: .bottomLeading, endPoint: .topTrailing))
-                        .clipShape(Capsule())
-                }
+//                NavigationLink {
+//                    ProvidersScreen(id: id)
+//                        .navigationBarBackButtonHidden()
+//                } label: {
+//                    Label("Providers", systemImage: "play.display")
+//                        .font(.system(size: 18))
+//                        .padding(.horizontal, 16)
+//                        .frame(height: 44)
+//                        .background(LinearGradient(colors: [Color.marsA, Color.marsB], startPoint: .bottomLeading, endPoint: .topTrailing))
+//                        .clipShape(Capsule())
+//                }
                 
                 VStack(spacing: 8) {
-                    HStack {
-                        ForEach(genres, id: \.self) { genre in
-                            Text(genre)
+                    if let genres = genres, !genres.isEmpty {
+                        HStack(spacing: 8) {
+                            ForEach(genres) { genre in
+                                Text(genre.name)
+                                    .font(.system(size: 12))
+                            }
                         }
                     }
                     HStack {

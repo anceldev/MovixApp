@@ -36,6 +36,7 @@ struct MovieScreen: View {
                             duration: movie.duration,
                             isAdult: movie.isAdult,
                             releasedDate: movie.releaseDate?.yearString ?? "NP",
+                            genres: movie.genres,
                             id: movie.id
                         )
                         MovieActionsBar(idMovie: movie.id, showRateSlider: $showRateSlider)
@@ -73,14 +74,13 @@ struct MovieScreen: View {
         .onAppear {
             Task {
                 await movieVM.getMovieDetails(id: movieId)
-                
+                await movieVM.getMovieCast(id: movieId)
             }
         }
         .swipeToDismiss()
     }
     private func makeRate() {
         let rateValue = round(currentRate * 10) / 10
-        print(rateValue)
     }
 }
 #Preview(body: {

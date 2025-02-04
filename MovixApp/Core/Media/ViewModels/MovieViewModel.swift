@@ -29,13 +29,12 @@ final class MovieViewModel {
             )
             let movie = try await httpClient.load(resource)
             self.movie = movie
-            try await getMovieCast(id: id)
         } catch{
             print(error.localizedDescription)
             self.errorMessage = error.localizedDescription
         }
     }
-    func getMovieCast(id: Int) async throws {
+    func getMovieCast(id: Int) async {
         do {
             let resource = Resource(
                 url: Endpoints.cast("\(id)", .movie).url,
@@ -47,7 +46,7 @@ final class MovieViewModel {
         } catch {
             print(error)
             print(error.localizedDescription)
-            throw error
+            self.errorMessage = error.localizedDescription
         }
     }
     

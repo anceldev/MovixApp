@@ -26,6 +26,7 @@ struct ReviewsTabView: View {
                 }
             }
         }
+        .padding(.bottom, 24)
         .onAppear {
             Task {
                 await movieVM.getMovieReviews(id: movieVM.movie?.id ?? 0)

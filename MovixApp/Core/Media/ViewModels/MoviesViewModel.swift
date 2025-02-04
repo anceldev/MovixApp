@@ -13,6 +13,12 @@ import Observation
 final class MoviesViewModel {
 //    var trendingMovies: [Movie] = []
     var trendingMovies: [ShortMovie] = []
+
+    // private var _trendingMoviesSet: Set<ShortMovie> = []
+    // var trendingMovies: [ShortMovie] {
+    //     Array(_trendingMoviesSet)
+    // }
+
     var searchedMovies: [ShortMovie] = []
 //    var searchedMovies: [Movie] = []
     var errorMessage: String?

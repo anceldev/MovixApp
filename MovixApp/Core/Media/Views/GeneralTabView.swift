@@ -11,7 +11,7 @@ struct GeneralTabView: View {
     let cast: [Cast]
     @State private var currentRate: Float = 0.0
     var body: some View {
-        VStack {
+        VStack(spacing: 20) {
             VStack(alignment: .leading, spacing: 12) {
                 Text("Actors")
                     .font(.system(size: 22, weight: .medium))
@@ -66,8 +66,6 @@ struct GeneralTabView: View {
             .frame(width: 76, height: 76)
             .background(.bw50)
             .clipShape(.circle)
-            
-            
             VStack {
                 Text(name)
                     .foregroundStyle(.white)

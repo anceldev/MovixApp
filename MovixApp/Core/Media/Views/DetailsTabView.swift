@@ -9,6 +9,7 @@ import SwiftUI
 
 struct DetailsTabView: View {
     let movie: Movie
+    
     let columns: [GridItem] = [
         GridItem(.flexible(minimum: 0, maximum: 130), spacing: 10, alignment: .topLeading),
         GridItem(.flexible(minimum: 0, maximum: .infinity), spacing: 0, alignment: .topLeading)
@@ -47,22 +48,12 @@ struct DetailsTabView: View {
                             .foregroundStyle(.bw50)
                     }
                 }
-                // ForEach(movieDetails.map { key, value in
-                //     (key, value)
-                // }, id: \.0) { key, value in
-                //     Text(key)
-                //         .font(.system(size: 14))
-                //         .foregroundStyle(.white)
-                //     Text(value)
-                //         .font(.system(size: 14))
-                //         .foregroundStyle(.bw50)
-                // }
             }
             Spacer()
         }
         .frame(maxWidth: .infinity)
-        .frame(maxHeight: .infinity)
         .padding(16)
+        .padding(.bottom, 24)
     }
 }
 

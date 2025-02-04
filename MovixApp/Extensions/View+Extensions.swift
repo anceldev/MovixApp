@@ -31,6 +31,13 @@ struct SwipeToDismissModifier: ViewModifier {
     }
 }
 
+struct OffsetKey: PreferenceKey {
+    static var defaultValue: CGFloat = 0
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = nextValue()
+    }
+}
+
 extension View {
     func swipeToDismiss() -> some View {
         self.modifier(SwipeToDismissModifier())
@@ -70,9 +77,4 @@ extension View {
         }
     }
 }
-struct OffsetKey: PreferenceKey {
-    static var defaultValue: CGFloat = 0
-    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
-        value = nextValue()
-    }
-}
+
